@@ -28,6 +28,7 @@ namespace Arma_3_Parser
         {
             InitializeComponent();
             Log("Program Start");
+            txtConfigPath.Text = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
         }
 
         private void Log(string text)
@@ -37,13 +38,23 @@ namespace Arma_3_Parser
             rtxtStatus.ScrollToEnd();
         }
 
-        private Microsoft.Win32.OpenFileDialog browseForFile(String path)
+        private Microsoft.Win32.OpenFileDialog browseForFile(String path, String filter)
         {
             // Create OpenFileDialog
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             // Set filter for file extension and default file extension
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "Text documents (.txt)|*.txt";
+            switch (filter)
+            {
+                case "txt":
+                    dlg.DefaultExt = ".txt";
+                    dlg.Filter = "Text documents (.txt)|*.txt";
+                    break;
+                case "exe":
+                    dlg.DefaultExt = ".exe";
+                    dlg.Filter = "Executable files (.exe)|*.exe";
+                    break;
+            }
+            
             // If there is a path, open to that path first
             if (txtConfigPath.Text == "")
                 ;
@@ -69,7 +80,7 @@ namespace Arma_3_Parser
 
         private void btnBrowseConfig_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtConfigPath.Text);
+            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtConfigPath.Text, "txt");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
             // Get the selected file name and display in a TextBox
@@ -122,7 +133,7 @@ namespace Arma_3_Parser
 
         private void btnBrowseSerialized_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtSerialized.Text);
+            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtSerialized.Text, "txt");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
             // Get the selected file name and display in a TextBox
@@ -136,7 +147,7 @@ namespace Arma_3_Parser
 
         private void btnBrowseOutput_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtOutputPath.Text);
+            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtOutputPath.Text, "txt");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
             // Get the selected file name and display in a TextBox
@@ -150,7 +161,7 @@ namespace Arma_3_Parser
 
         private void btnBrowseBankRev_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtBankRevPath.Text);
+            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtBankRevPath.Text, "exe");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
             // Get the selected file name and display in a TextBox
@@ -164,7 +175,7 @@ namespace Arma_3_Parser
 
         private void btnBrowseCFGConvert_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtCfgConvertPath.Text);
+            Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtCfgConvertPath.Text, "exe");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
             // Get the selected file name and display in a TextBox
@@ -288,11 +299,20 @@ namespace Arma_3_Parser
             //Serialize
             if (cbSerialize.IsChecked.Value)
             {
+                if (cbConvertIsNeeded.IsChecked.Value)
+                    ;
+                else
+                    cppList = GenLib.cppList(cppPath);
                 //Data Grab > Objects
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
-                Parallel.For(0, cppList.Count, x =>
+                Parallel.For(0,
+                    cppList.Count, new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = 1
+                    },
+                    a =>
                 {
-                    fileArray[x] = GenLib.parseFile(cppList[x]);
+                    fileArray[a] = GenLib.parseFile(cppList[a]);
                 });
                 //Serialize
                 Log("Serializing...");

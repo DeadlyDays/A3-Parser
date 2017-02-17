@@ -37,23 +37,27 @@ namespace Arma_3_Parser
                 {
                     if (cursor.Contains("class"))//found a new class dec
                     {
-                        a3c.OriginalCode.Add(cursor);//add originalcode line
-                        int loc = cursor.IndexOf("class");//find where in the line the class keyword starts
-                        loc += 5;//find the location where the actual classname starts
-                        int end = endOfWord(cursor, loc);//the point the classname ends
+                        String temp = stripFormating(cursor);
+                        int loc = temp.IndexOf("class");//find where in the line the class keyword starts
+                        loc += 6;//find the location where the actuall classname starts
+                        int end = endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c.A3ClassName = cursor.Substring(loc, length);//grab the className;
+                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
                         if (cursor.Contains(":"))//does this class extend a base class
                         {
-                            loc = cursor.IndexOf(":");
-                            loc = startOfNextWord(cursor, loc);//find start of baseClass Name
-                            end = endOfWord(cursor, loc);
+                            loc = temp.IndexOf(":");
+                            loc = startOfNextWord(temp, loc);//find start of baseClass Name
+                            end = endOfWord(temp, loc);
                             length = end - loc;
-                            a3c.ExtendedTree.Add(cursor.Substring(loc, length));//base class name;
+                            a3c.ExtendedTree.Add(temp.Substring(loc, length));//base class name;
 
                         }
+                        a3c.OriginalCode.Add(cursor);//add originalcode line
                     }
-                    A3ClassList.Add(a3c);//store class
+                    if (a3ClassList != null)
+                        a3ClassList.Add(a3c);//store class
+                    else
+                        a3ClassList = new List<A3Class> { a3c };
                     a3c = new A3Class();//clear class
                     continue;
                 }
@@ -86,7 +90,10 @@ namespace Arma_3_Parser
                 {
                     a3c.OriginalCode.Add(cursor);
                     depth--;//decrease depth
-                    A3ClassList.Add(a3c);//store class
+                    if (a3ClassList != null)
+                        a3ClassList.Add(a3c);//store class
+                    else
+                        a3ClassList = new List<A3Class> { a3c };
                     a3c = new A3Class();//clear class
                     continue;
                 }
@@ -96,21 +103,23 @@ namespace Arma_3_Parser
                 {
                     if(cursor.Contains("class"))//found a new class dec
                     {
-                        a3c.OriginalCode.Add(cursor);//add originalcode line
-                        int loc = cursor.IndexOf("class");//find where in the line the class keyword starts
-                        loc += 5;//find the location where the actuall classname starts
-                        int end = endOfWord(cursor, loc);//the point the classname ends
+                        
+                        String temp = stripFormating(cursor);
+                        int loc = temp.IndexOf("class");//find where in the line the class keyword starts
+                        loc += 6;//find the location where the actuall classname starts
+                        int end = endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c.A3ClassName = cursor.Substring(loc, length);//grab the className;
+                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
                         if(cursor.Contains(":"))//does this class extend a base class
                         {
-                            loc = cursor.IndexOf(":");
-                            loc = startOfNextWord(cursor, loc);//find start of baseClass Name
-                            end = endOfWord(cursor, loc);
+                            loc = temp.IndexOf(":");
+                            loc = startOfNextWord(temp, loc);//find start of baseClass Name
+                            end = endOfWord(temp, loc);
                             length = end - loc;
-                            a3c.ExtendedTree.Add(cursor.Substring(loc, length));//base class name;
+                            a3c.ExtendedTree.Add(temp.Substring(loc, length));//base class name;
 
                         }
+                        a3c.OriginalCode.Add(cursor);//add originalcode line
                     }
                 }
                 else
@@ -127,7 +136,7 @@ namespace Arma_3_Parser
             int end = line.Length;
             for(int i = startOfWord; i < line.Length; i++)
             {
-                if(line[i].Equals(' ') || line[i].Equals(':') || line[i].Equals(';') || line[i].Equals('\\') || line[i].Equals('/') || line[i].Equals('{') || line[i].Equals('['))
+                if(line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
                     return i;
             }
             return end;
@@ -137,13 +146,19 @@ namespace Arma_3_Parser
             int result = startLoc;
             for(int i = startLoc; i < line.Length; i++)
             {
-                if (line[i].Equals(' ') || line[i].Equals(':') || line[i].Equals(';') || line[i].Equals('\\') || line[i].Equals('/') || line[i].Equals('{') || line[i].Equals('['))
+                if (line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
                     ;
                 else
                     return i;
             }
 
             return result;
+        }
+
+        public String stripFormating(String var)
+        {
+            var = var.Replace("\r", "").Replace("\t", "").Replace("\n", "");
+            return var;
         }
 
         public String FilePath
@@ -159,6 +174,7 @@ namespace Arma_3_Parser
                 filePath = value;
             }
         }
+        
         public String OriginalCodeString
         {
             get

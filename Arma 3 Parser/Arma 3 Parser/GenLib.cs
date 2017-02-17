@@ -78,10 +78,10 @@ namespace Arma_3_Parser
 
         public static A3CppFile parseFileForClasses(A3CppFile file)//process a filepath listed in a file for all the classes and sort them into the file
         {
+            file.stripClasses();
 
 
-
-            return new Arma_3_Parser.A3CppFile();
+            return file;
         }
 
         public static void serialize(List<String> fromList, String toFile)

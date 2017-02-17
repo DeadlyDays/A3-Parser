@@ -23,6 +23,16 @@ namespace Arma_3_Parser
 
         public A3Class() { }
 
+        public A3Class(String name)
+        {
+            a3ClassName = name;
+            fileLocation = "";
+        }
+
+        public void recursiveParseClasses()//parses all the children classes in originalcode and tells each child to do the same
+        {
+
+        }
 
         public String A3ClassName
         {
