@@ -27,6 +27,7 @@ namespace Arma_3_Parser
         public MainWindow()
         {
             InitializeComponent();
+            Log("Program Start");
         }
 
         private void Log(string text)
@@ -246,29 +247,60 @@ namespace Arma_3_Parser
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            Log("Saving Configuration to " + txtConfigPath.Text);
             writeConfig();
+            Log("Save Complete");
         }
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
+            Log("Loading Configuration from " + txtConfigPath.Text);
             readConfig();
+            Log("Load Complete");
         }
 
         private void btnProcess_Click(object sender, RoutedEventArgs e)
         {
+            String pboPath = txtPboPath.Text;
+            String binPath = txtBinPath.Text;
+            String cppPath = txtCppPath.Text;
+            String serialPath = txtSerialized.Text;
+            String outputPath = txtOutputPath.Text;
 
             //Extract
-            List<String> binList = GenLib.extract(txtPboPath.Text, txtBinPath.Text);
+            List<String> binList = new List<String>();
+            if (cbExtractIsNeeded.IsChecked.Value)
+            {
+                Log("Extracting Files At: " + pboPath);
+                binList = GenLib.extract(pboPath, binPath);
+                Log("Extracted Files To: " + binPath);
+            }
             //Convert
-            List<String> cppList = GenLib.convert(binList, txtBinPath.Text);
+            List<String> cppList = new List<String>();
+            if (cbConvertIsNeeded.IsChecked.Value)
+            {
+                Log("Converting Files At: " + binPath);
+                if (!cbExtractIsNeeded.IsChecked.Value)
+                    binList = GenLib.binList(binPath);
+                cppList = GenLib.convert(binList, binPath);
+                Log("Converted Files To: " + cppPath);
+            }
             //Serialize
-            GenLib.serialize(cppList, txtSerialized.Text);
+            if (cbSerialize.IsChecked.Value)
+            {
+                Log("Serializing...");
+                GenLib.serialize(cppList, serialPath);
+                Log("Serialized");
+            }
             ///Parse
             ///
-            
-            //Apply Filters
+            if (cbProcess.IsChecked.Value)
+            {
+                Log("Parsing...");
+                //Apply Filters
 
-
+                Log("Parsed");
+            }
 
         }
     }

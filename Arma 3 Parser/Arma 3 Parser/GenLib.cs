@@ -8,6 +8,11 @@ namespace Arma_3_Parser
 {
     static class GenLib//General Library of Methods
     {
+        public static List<String> binList(String path)
+        {
+
+            return new List<String>();
+        }
 
         public static List<String> extract(String fromPath, String toPath)
         {
