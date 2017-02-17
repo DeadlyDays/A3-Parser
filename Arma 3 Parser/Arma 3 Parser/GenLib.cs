@@ -58,6 +58,12 @@ namespace Arma_3_Parser
             return System.IO.Directory.GetFiles(toPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
         }
 
+        public static A3CppFile parseFile(String path)//process a cpp file into a A3CppFile object
+        {
+
+            return new Arma_3_Parser.A3CppFile();
+        }
+
         public static void serialize(List<String> fromList, String toFile)
         {
 
