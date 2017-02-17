@@ -8,79 +8,77 @@
         Title="Arma 3 Parser" Height="628.922" Width="1024.349" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Background="#FF919191" Foreground="#FF999999" BorderBrush="#FF510000">
     <Grid Width="1014" Height="458" HorizontalAlignment="Left" VerticalAlignment="Top">
 
-        
-        
         <Label x:Name="lblConfigPath" Content="Path to Config File" Margin="10,5,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button x:Name="btnLoad" Content="Load" HorizontalAlignment="Left" Margin="159,11,0,0" VerticalAlignment="Top" Width="74" Click="btnLoad_Click"/>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="269,11,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
+        <Button x:Name="btnLoad" Content="Load" HorizontalAlignment="Left" Margin="159,11,0,0" VerticalAlignment="Top" Width="74" Click="btnLoad_Click" />
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="269,11,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click" />
         <TextBox x:Name="txtConfigPath" Height="35" Margin="14,31,0,0" TextWrapping="Wrap" Text="" Width="330" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="349,44,0,0" x:Name="btnBrowseConfig" VerticalAlignment="Top" Width="88" Click="btnBrowseConfig_Click" />
-        
+
         <Label x:Name="lblPBO" Content="Path to PBO Folder" Margin="10,65,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtPboPath" Height="35" Margin="14,89,0,0" TextWrapping="Wrap" Text="" Width="330" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbExtractIsNeeded" Content="Extract?" Margin="351,89,0,0"  Checked="checkBox_Checked" RenderTransformOrigin="0.32,0.263" Unchecked="checkBox_UnChecked" Height="15" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="20" HorizontalAlignment="Left" Margin="350,104,0,0" Name="btnBrowsePBO" VerticalAlignment="Top" Width="88" />
-        
+        <CheckBox x:Name="cbExtractIsNeeded" Content="Extract?" Margin="351,89,0,0"   RenderTransformOrigin="0.32,0.263" Height="15" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Browse" Height="20" HorizontalAlignment="Left" Margin="350,104,0,0" Name="btnBrowsePBO" VerticalAlignment="Top" Width="88" Click="btnBrowsePBO_Click" />
+
         <Label x:Name="lblBIN" Content="Path to BIN Folder" Margin="10,123,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtBinPath" Height="35" Margin="14,145,0,0" TextWrapping="Wrap" Text="" Width="330" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbConvertIsNeeded" Content="Convert?" Margin="351,145,0,0" Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="14" Width="67" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,158,0,0" x:Name="btnBrowseBIN" VerticalAlignment="Top" Width="88" />
+        <CheckBox x:Name="cbConvertIsNeeded" Content="Convert?" Margin="351,145,0,0"  Height="14" Width="67" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,158,0,0" x:Name="btnBrowseBIN" VerticalAlignment="Top" Width="88" Click="btnBrowseBIN_Click" />
 
         <Label x:Name="lblCPP" Content="Path to CPP Folder" Margin="10,179,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtCppPath" Height="35" Margin="14,202,0,0" TextWrapping="Wrap" Text="" Width="330" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbSerialize" Content="Serialize?"  Margin="351,202,0,0"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="20" Width="76" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,215,0,0" x:Name="btnBrowseCPP" VerticalAlignment="Top" Width="88" />
+        <CheckBox x:Name="cbSerialize" Content="Serialize?"  Margin="351,202,0,0"  Height="20" Width="76" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,215,0,0" x:Name="btnBrowseCPP" VerticalAlignment="Top" Width="88" Click="btnBrowseCPP_Click" />
 
         <Label x:Name="lblSerialized" Content="Path to Serialized File" Margin="10,233,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtSerialized" Height="35" Margin="14,258,0,0" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="330" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbProcess" Content="Process?"  Margin="351,256,0,0"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="350,271,0,0" x:Name="btnBrowseSerialized" VerticalAlignment="Top" Width="88" />
+        <CheckBox x:Name="cbProcess" Content="Parse?"  Margin="351,256,0,0"   Height="18" Width="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="350,271,0,0" x:Name="btnBrowseSerialized" VerticalAlignment="Top" Width="88" Click="btnBrowseSerialized_Click" />
 
         <Label x:Name="lblOutput" Content="Path to Output File" Margin="10,292,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtOutputPath" Height="35" Margin="14,316,0,0" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="330" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,329,0,0" x:Name="btnBrowseOutput" VerticalAlignment="Top" Width="88" />
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="351,329,0,0" x:Name="btnBrowseOutput" VerticalAlignment="Top" Width="88" Click="btnBrowseOutput_Click" />
 
         <Label x:Name="lblTools" Content="Requires Arma 3 Tools to Convert and Extract, these can be loaded via Steam." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,387,0,0" Width="416" Height="34"/>
 
         <Label x:Name="lblUnpack" Content="Path to A3 Unpack Tool (BankRev)" Margin="10,407,0,0" Height="26" Width="189" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtBankRevPath" Height="35" Margin="17,430,0,-7" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="327" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="349,443,0,-7" x:Name="btnBrowseBankRev" VerticalAlignment="Top" Width="88" />
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="349,443,0,-7" x:Name="btnBrowseBankRev" VerticalAlignment="Top" Width="88" Click="btnBrowseBankRev_Click" />
 
         <Label x:Name="lblConvert" Content="Path to A3 Conversion Tool (CfgConvert)" Margin="10,463,0,-31" Height="26" Width="223" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="txtCfgConvertPath" Height="35" Margin="17,487,0,-64" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="327" VerticalAlignment="Top"/>
-        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="350,500,0,-64" x:Name="btnBrowseCFGConvert" VerticalAlignment="Top" Width="88" />
+        <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="350,500,0,-64" x:Name="btnBrowseCFGConvert" VerticalAlignment="Top" Width="88" Click="btnBrowseCFGConvert_Click" />
 
-        <Label x:Name="lblNotContainPartClass" Content="Class Name Must NOT Contain Part of One of These" Margin="443,10,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote1" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,25,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtNotContainPartClass" Margin="443,50,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <Label x:Name="lblNotContainPartClass" Content="Class Name NOT Contain Part Of Any:" Margin="443,20,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote1" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,35,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtNotContainPartClass" Margin="443,60,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblContainPartClass" Content="Class Name Must Contain Part of One of These" Margin="443,94,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote2" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,109,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtContainPartClass" Margin="443,134,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <Label x:Name="lblContainPartClass" Content="Class Name Contain Part Of Any:" Margin="443,104,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote2" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,119,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtContainPartClass" Margin="443,144,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblHasDirectParent" Content="Class's Direct Parent Must Be One Of These" Margin="442,171,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote3" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,186,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtHasDirectParent" Margin="442,211,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
-        
-        <Label x:Name="lblHasParent" Content="Must Have Any Parent" Margin="443,249,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote4" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,264,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtHasParent" Margin="443,289,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
-        
-        <Label x:Name="lblContainsFields" Content="Must Contain Any of Fields" Margin="442,331,0,0" Width="357" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote5" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,346,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtContainsFields" Margin="442,371,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
-        
-        <Label x:Name="lblDisplayFields" Content="Display Only These Fields" Margin="443,412,0,0" Width="313" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote6" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,426,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtDisplayFields" Margin="443,451,0,-31" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <Label x:Name="lblHasDirectParent" Content="Has Direct Parent Of Any:" Margin="442,181,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote3" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,196,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtHasDirectParent" Margin="442,221,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <CheckBox x:Name="cbShowClassName" Content="Show Class Name?"  Margin="443,501,0,-61"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbShowParentClass" Content="Show Parent Class?"  Margin="599,501,0,-61"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbShowBaseClass" Content="Show Base Class?"  Margin="443,525,0,-85"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbOutputSource" Content="Output Source?"  Margin="599,525,0,-85"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbDisplayAllFields" Content="Display All Fields?"  Margin="443,548,0,-108"  Checked="checkBox_Checked" Unchecked="checkBox_UnChecked" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label x:Name="lblHasParent" Content="Has One of Parents:" Margin="443,259,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote4" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,274,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtHasParent" Margin="443,299,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblStatus" Content="Status" HorizontalAlignment="Left" Margin="813,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblContainsFields" Content="Field Name Contains Any Field Of:" Margin="442,341,0,0" Width="357" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote5" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,356,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtContainsFields" Margin="442,381,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+
+        <Label x:Name="lblDisplayFields" Content="Display Fields:" Margin="443,422,0,0" Width="313" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote6" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,436,0,-3" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtDisplayFields" Margin="443,461,0,-41" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+
+        <CheckBox x:Name="cbShowClassName" Content="Show Class Name?"  Margin="443,511,0,-71" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowParentClass" Content="Show Parent Class?"  Margin="599,511,0,-71" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowBaseClass" Content="Show Base Class?"  Margin="443,535,0,-95" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbOutputSource" Content="Output Source?"  Margin="599,535,0,-95" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbDisplayAllFields" Content="Display All Fields?"  Margin="443,558,0,-118" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Label x:Name="lblStatus" Content="Status Log:" HorizontalAlignment="Left" Margin="813,10,0,0" VerticalAlignment="Top"/>
         <RichTextBox x:Name="rtxtStatus" HorizontalAlignment="Left" Height="468" Margin="813,35,0,-45" VerticalAlignment="Top" Width="170" IsEnabled="False">
             <FlowDocument>
                 <Paragraph>
@@ -88,8 +86,9 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        
-        <Button x:Name="btnProcess" Content="Process" Height="46" Margin="14,523,0,-111" Width="240" Click="btnParse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Button x:Name="btnProcess" Content="Process" Height="46" Margin="14,523,0,-111" Width="240" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnProcess_Click"/>
+        <Label x:Name="lblClassFilters" Content="Class Filters" HorizontalAlignment="Left" Margin="443,3,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
