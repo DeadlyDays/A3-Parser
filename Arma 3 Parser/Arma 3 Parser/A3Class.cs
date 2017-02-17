@@ -21,7 +21,7 @@ namespace Arma_3_Parser
         private List<String> content;//This is everything between the brackets
         private List<A3Variable> variables;//All the variables and their values for this class
 
-        A3Class() { }
+        public A3Class() { }
 
 
         public String A3ClassName

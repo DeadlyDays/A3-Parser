@@ -292,7 +292,7 @@ namespace Arma_3_Parser
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
                 Parallel.For(0, cppList.Count, x =>
                 {
-                    fileArray[x] = parseFile(cppList[x]);
+                    fileArray[x] = GenLib.parseFile(cppList[x]);
                 });
                 //Serialize
                 Log("Serializing...");
