@@ -53,6 +53,7 @@ namespace Arma_3_Parser
                 int depth = 0; int end = 0;
                 for (int i = 0; i < Content.Count; i++)//iterate through content
                 {
+                skip:;
                     String cursor = Content[i];//Current value being acessed
                     if (cursor.Contains("class"))//if there is a class, find the end and skip there.
                     {
@@ -67,17 +68,21 @@ namespace Arma_3_Parser
                                 depth -= cursor2.Count(f => f == '}');
                             if (depth == 0)
                             {
-                                i = e;
-                                break;
+                                i = e + 1;
+                                if (i >= Content.Count)
+                                    goto end;
+                                else
+                                    goto skip;
                             }
                         }
                     }
-
+                    
                     if (ContentNoClasses.Count > 0)
                         ContentNoClasses.Add(cursor);
                     else
                         ContentNoClasses = new List<String> { cursor };
-                    
+                    end:;
+
                 }
             }
             
@@ -118,10 +123,10 @@ namespace Arma_3_Parser
                                     a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
 
                             }
-                            if (a3c.Content != null && a3c.Content.Count > 0)
-                                a3c.Content.Add(cursor);//add originalcode line
+                            if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                                a3c.OriginalCode.Add(cursor);//add originalcode line
                             else
-                                a3c.Content = new List<String> { cursor };
+                                a3c.OriginalCode = new List<String> { cursor };
                         }
                     if (subClasses != null && Content.Count > 0)
                         subClasses.Add(a3c);//store class
@@ -131,13 +136,20 @@ namespace Arma_3_Parser
                     continue;
                 }
 
-                //First Check, has depth increased
-                if (cursor.Contains("{"))
-                {
-                        if (a3c.Content != null && a3c.Content.Count > 0)
-                            a3c.Content.Add(cursor);//add originalcode line
+                    //First Check, has depth increased
+                if (cursor.Contains("{}"))
+                    {
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
-                            a3c.Content = new List<String> { cursor };
+                            a3c.OriginalCode = new List<String> { cursor };
+                    }
+                else if (cursor.Contains("{"))
+                {
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
+                        else
+                            a3c.OriginalCode = new List<String> { cursor };
                         //Need to handle if multiple opens and closes on a single line(god forbid)
                         if (((Regex.Split(cursor, "{")).Length - 1) > 1)
                     {
@@ -147,12 +159,14 @@ namespace Arma_3_Parser
                         depth++;
                 }
                 //check if depth has decreased (can happen on same line)
-                if (cursor.Contains("}") && (depth > 1))
+                if (cursor.Contains("{}"))
+                        ;
+                else if (cursor.Contains("}") && (depth > 1))
                 {
-                        if (a3c.Content != null && a3c.Content.Count > 0)
-                            a3c.Content.Add(cursor);//add originalcode line
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
-                            a3c.Content = new List<String> { cursor };
+                            a3c.OriginalCode = new List<String> { cursor };
                         //Need to handle if multiple opens and closes on a single line(god forbid)
                         if (((Regex.Split(cursor, "}")).Length - 1) > 1)
                     {
@@ -163,10 +177,10 @@ namespace Arma_3_Parser
                 }
                 else if (cursor.Contains("}"))//if the depth is 1 and closing, that is the end of this class
                 {
-                        if (a3c.Content != null && a3c.Content.Count > 0)
-                            a3c.Content.Add(cursor);//add originalcode line
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
-                            a3c.Content = new List<String> { cursor };
+                            a3c.OriginalCode = new List<String> { cursor };
                         depth--;//decrease depth
                     if (subClasses != null && Content.Count > 0)
                         subClasses.Add(a3c);//store class
@@ -200,18 +214,18 @@ namespace Arma_3_Parser
                                     a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
 
                             }
-                            if (a3c.Content != null && a3c.Content.Count > 0)
-                                a3c.Content.Add(cursor);//add originalcode line
+                            if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                                a3c.OriginalCode.Add(cursor);//add originalcode line
                             else
-                                a3c.Content = new List<String> { cursor };
+                                a3c.OriginalCode = new List<String> { cursor };
                         }
                 }
-                else
+                else if(!(cursor.Contains("{") || cursor.Contains("}")))
                 {
-                        if (a3c.Content != null && a3c.Content.Count > 0)
-                            a3c.Content.Add(cursor);//add originalcode line
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
-                            a3c.Content = new List<String> { cursor };
+                            a3c.OriginalCode = new List<String> { cursor };
                     }
 
 
@@ -263,13 +277,14 @@ namespace Arma_3_Parser
                         else
                             Variables = new List<A3Variable> { var };
                     }
-                    else//variable
+                    else if (cursor.Contains("="))//variable
                     {
                         if (Variables.Count > 0)
                             Variables.Add(new A3Variable(cursor));
                         else
                             Variables = new List<A3Variable> { new A3Variable(cursor) };
                     }
+                    if (Variables.Count > 0)
                     Variables[Variables.Count - 1].processCode();//process the last variable added
             }
             if(SubClasses.Count > 0)

@@ -126,7 +126,14 @@ namespace Arma_3_Parser
                 }
 
                 //First Check, has depth increased
-                if(cursor.Contains("{"))
+                if (cursor.Contains("{}"))
+                {
+                    if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                        a3c.OriginalCode.Add(cursor);//add originalcode line
+                    else
+                        a3c.OriginalCode = new List<String> { cursor };
+                }
+                else if(cursor.Contains("{"))
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
@@ -141,7 +148,9 @@ namespace Arma_3_Parser
                         depth++;
                 }
                 //check if depth has decreased (can happen on same line)
-                if(cursor.Contains("}") && (depth > 1))
+                if (cursor.Contains("{}"))
+                    ;
+                else if (cursor.Contains("}") && (depth > 1))
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
@@ -219,7 +228,11 @@ namespace Arma_3_Parser
 
         public void stripVariables()//
         {
-
+            if(a3ClassList.Count > 0)
+            foreach(A3Class x in a3ClassList)
+            {
+                    x.recursiveParseVariables();
+            }
         }
 
         public void buildTrees()

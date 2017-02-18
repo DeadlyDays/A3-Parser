@@ -77,7 +77,7 @@ namespace Arma_3_Parser
             //Build Inheritance Tree
 
             //Parse all Variables
-
+            file = parseFileClassesForVariables(file);
             return file;
         }
 
