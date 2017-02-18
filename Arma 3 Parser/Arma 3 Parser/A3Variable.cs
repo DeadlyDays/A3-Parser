@@ -15,7 +15,21 @@ namespace Arma_3_Parser
 
         private List<String> value;//All the contents of the A3 Variable
         private List<String> originalCode;//All the code that declared the field and its value
-        A3Variable() { }
+        public A3Variable() { }
+
+        public A3Variable(String codeLine)
+        {
+            fieldName = "";
+            varClassName = "";
+            linePosition = 0;
+            originalCode = new List<String> { codeLine };
+            
+        }
+
+        public void processCode()//sort out the name and values from originalCode
+        {
+
+        }
 
         public String FieldName
         {
