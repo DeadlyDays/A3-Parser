@@ -14,12 +14,13 @@ namespace Arma_3_Parser
         private String fileLocation;
         private int lineLocation;
 
-        private List<A3Class> children;//all of the child classes
+        private List<A3Class> subClasses;//all of the classes declared within context of this class
         private List<String> inheritanceTree;//list of all the parent elements(things extended + classes nested within)
         private List<String> nestedTree;//just the inheritance tree of classes nested within
         private List<String> extendedTree;//just the inheritance tree of the classes extended
         private List<String> originalCode;//this is the class dec + brackets and all between
         private List<String> content;//This is everything between the brackets
+        private List<String> contentNoClasses;//This is everything between the brackets less the subclasses
         private List<A3Variable> variables;//All the variables and their values for this class
 
         public A3Class() { }
@@ -42,6 +43,43 @@ namespace Arma_3_Parser
             }
             else
                 ;
+            
+        }
+
+        public void filterContentNoClasses()//strip subclasses and their content from content list
+        {
+            if(Content.Count > 1)
+            {
+                int depth = 0; int end = 0;
+                for (int i = 0; i < Content.Count; i++)//iterate through content
+                {
+                    String cursor = Content[i];//Current value being acessed
+                    if (cursor.Contains("class"))//if there is a class, find the end and skip there.
+                    {
+                        if (cursor.Contains(";"))
+                            continue;
+                        for(int e = i + 1; e < Content.Count; e++)//iterate through content starting at current location
+                        {
+                            String cursor2 = Content[e];
+                            if (cursor2.Contains("{"))
+                                depth += cursor2.Count(f => f == '{');
+                            if (cursor2.Contains("}"))
+                                depth -= cursor2.Count(f => f == '}');
+                            if (depth == 0)
+                            {
+                                i = e;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (ContentNoClasses.Count > 0)
+                        ContentNoClasses.Add(cursor);
+                    else
+                        ContentNoClasses = new List<String> { cursor };
+                    
+                }
+            }
             
         }
 
@@ -85,10 +123,10 @@ namespace Arma_3_Parser
                             else
                                 a3c.Content = new List<String> { cursor };
                         }
-                    if (children != null && Content.Count > 0)
-                        children.Add(a3c);//store class
+                    if (subClasses != null && Content.Count > 0)
+                        subClasses.Add(a3c);//store class
                     else
-                        children = new List<A3Class> { a3c };
+                        subClasses = new List<A3Class> { a3c };
                     a3c = new A3Class();//clear class
                     continue;
                 }
@@ -130,10 +168,10 @@ namespace Arma_3_Parser
                         else
                             a3c.Content = new List<String> { cursor };
                         depth--;//decrease depth
-                    if (children != null && Content.Count > 0)
-                        children.Add(a3c);//store class
+                    if (subClasses != null && Content.Count > 0)
+                        subClasses.Add(a3c);//store class
                     else
-                        children = new List<A3Class> { a3c };
+                        subClasses = new List<A3Class> { a3c };
                     a3c = new A3Class();//clear class
                     continue;
                 }
@@ -178,12 +216,19 @@ namespace Arma_3_Parser
 
 
             }
-            if(children != null)
-            foreach (A3Class x in children)
+            if(subClasses != null)
+            foreach (A3Class x in subClasses)
             {
                 x.recursiveParseClasses();//sort all the children classes in each class, recursively
             }
         }
+
+        public void recursiveParseVariables()
+        {
+
+        }
+
+
 
         public String A3ClassName
         {
@@ -222,17 +267,17 @@ namespace Arma_3_Parser
                 lineLocation = value;
             }
         }
-        public List<A3Class> Children
+        public List<A3Class> SubClasses
         {
             get
             {
-                if (children == null)
+                if (subClasses == null)
                     return new List<A3Class>();
-                return children;
+                return subClasses;
             }
             set
             {
-                children = value;
+                subClasses = value;
             }
         }
         public List<String> InheritanceTree
@@ -298,6 +343,19 @@ namespace Arma_3_Parser
             set
             {
                 content = value;
+            }
+        }
+        public List<String> ContentNoClasses
+        {
+            get
+            {
+                if (contentNoClasses == null)
+                    return new List<String>();
+                return contentNoClasses;
+            }
+            set
+            {
+                contentNoClasses = value;
             }
         }
         public List<A3Variable> Variables

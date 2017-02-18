@@ -71,7 +71,12 @@ namespace Arma_3_Parser
             file.FilePath = path;
             file.OriginalCodeString = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);//read file contents into String
             file.splitOCode();//split string into list by line
+
+            //Parse all Class's
             file = parseFileForClasses(file);//Find and seperate the classes with their content
+            //Build Inheritance Tree
+
+            //Parse all Variables
 
             return file;
         }
@@ -79,8 +84,24 @@ namespace Arma_3_Parser
         public static A3CppFile parseFileForClasses(A3CppFile file)//process a filepath listed in a file for all the classes and sort them into the file
         {
             file.stripClasses();
+            return file;
+        }
 
+        public static A3CppFile parseFileClassesForVariables(A3CppFile file)//build list of variables
+        {
+            file.stripVariables();
+            return file;
+        }
 
+        public static A3CppFile processFileClassesForInheritanceTree(A3CppFile file)//build the nested and extended tree lists and combine into inheritance tree
+        {
+            file.buildTrees();
+            return file;
+        }
+        
+        public static A3CppFile actualizeInheritanceForClassesInFile(A3CppFile file)//import variables from extended tree
+        {
+            file.actualizeInheritance();
             return file;
         }
 

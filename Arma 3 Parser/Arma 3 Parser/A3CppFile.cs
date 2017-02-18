@@ -217,7 +217,21 @@ namespace Arma_3_Parser
             }
         }
 
-        
+        public void stripVariables()//
+        {
+
+        }
+
+        public void buildTrees()
+        {
+
+        }
+
+        public void actualizeInheritance()
+        {
+
+        }
+
         public String FilePath
         {
             get
