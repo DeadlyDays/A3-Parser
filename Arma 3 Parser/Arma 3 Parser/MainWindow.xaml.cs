@@ -304,16 +304,29 @@ namespace Arma_3_Parser
                 else
                     cppList = GenLib.cppList(cppPath);
                 //Data Grab > Objects
+
+                ///MultiThread
+                ///
+                /*
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
                 Parallel.For(0,
-                    cppList.Count, new ParallelOptions
+                    (cppList.Count - 1), new ParallelOptions
                     {
                         MaxDegreeOfParallelism = 1
                     },
                     a =>
                 {
                     fileArray[a] = GenLib.parseFile(cppList[a]);
-                });
+                });*/
+                ///SingleThread
+                ///
+                A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
+                for(int i = 0; i < cppList.Count; i++)
+                    {
+                        fileArray[i] = GenLib.parseFile(cppList[i]);
+                    }
+
+
                 //Serialize
                 Log("Serializing...");
                 GenLib.serialize(cppList, serialPath);

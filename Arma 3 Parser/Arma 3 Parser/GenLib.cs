@@ -89,5 +89,38 @@ namespace Arma_3_Parser
 
 
         }
+
+
+        public static int endOfWord(String line, int startOfWord)
+        {
+            int end = line.Length;
+            for (int i = startOfWord; i < line.Length; i++)
+            {
+                if (line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
+                    return i;
+            }
+            return end;
+        }
+
+        public static int startOfNextWord(String line, int startLoc)
+        {
+            int result = startLoc;
+            for (int i = startLoc; i < line.Length; i++)
+            {
+                if (line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
+                    ;
+                else
+                    return i;
+            }
+
+            return result;
+        }
+
+        public static String stripFormating(String var)
+        {
+            var = var.Replace("\r", "").Replace("\t", "").Replace("\n", "");
+            return var;
+        }
+
     }
 }
