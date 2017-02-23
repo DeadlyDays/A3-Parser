@@ -233,12 +233,18 @@ namespace Arma_3_Parser
             }
         }
 
-        public void buildTrees()
+        public void buildTrees()//populate extended and nested tree's
         {
-
+            if(A3ClassList.Count > 0)
+            foreach(A3Class x in A3ClassList)
+            {
+                x.buildNestedTree();
+                x.buildExtendedTree(A3ClassList);
+                x.buildInheritanceTree();
+            }
         }
 
-        public void actualizeInheritance()
+        public void actualizeInheritance()//child classes will grab inherited fields from parents
         {
 
         }

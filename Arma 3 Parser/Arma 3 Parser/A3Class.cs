@@ -298,7 +298,69 @@ namespace Arma_3_Parser
             }
         }
 
+        public void buildNestedTree()
+        {
+            if (NestedTree.Count > 0)
+            {
+                foreach (A3Class x in SubClasses)
+                {
+                    if (x.NestedTree.Count > 0)
+                        x.NestedTree.Add(A3ClassName);
+                    else
+                        x.NestedTree = new List<String> { A3ClassName };
+                }
 
+                foreach (A3Class x in SubClasses)
+                {
+                    x.buildNestedTree();
+                }
+            }
+        }
+
+        public void buildExtendedTree(List<A3Class> list)
+        {
+            Boolean workLeft = true;
+            int place = 0;
+            if(ExtendedTree.Count > 0)//only if there is a base class
+            while(workLeft)
+            {
+                String cursor = "";
+                if (ExtendedTree.Count > place)
+                    cursor = ExtendedTree[place];
+                else//break out of the loop if we are no longer looking at anything
+                    break;
+                
+                for (int i = 0; i < list.Count; i++)//Find the base class
+                    {
+                        if(list[i].A3ClassName == cursor)
+                        {
+                            if(list[i].ExtendedTree.Count > 0)
+                            {
+                                ExtendedTree.Add(list[i].ExtendedTree[0]);
+                                place++;
+                                break;
+                            }
+                        }
+                    }
+            }
+            if(SubClasses.Count > 0)
+                foreach(A3Class x in SubClasses)
+                {
+                    x.buildExtendedTree(list);
+                }
+        }
+
+        public void buildInheritanceTree()
+        {
+            if (NestedTree.Count > 0 && ExtendedTree.Count > 0)
+                InheritanceTree = ExtendedTree.Concat(NestedTree).ToList();
+            else if (NestedTree.Count > 0)
+                InheritanceTree = NestedTree;
+            else if (ExtendedTree.Count > 0)
+                InheritanceTree = ExtendedTree;
+            else
+                ;
+        }
 
         public String A3ClassName
         {
