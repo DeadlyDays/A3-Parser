@@ -329,13 +329,18 @@ namespace Arma_3_Parser
 
                 //Serialize
                 Log("Serializing...");
-                GenLib.serialize(cppList, serialPath);
+                GenLib.serialize(fileArray.ToList(), serialPath);
                 Log("Serialized");
             }
             ///Parse
             ///
             if (cbProcess.IsChecked.Value)
             {
+                
+                Log("Deserializing...");
+                //Deserialize objects to parse
+                List<A3CppFile> list = GenLib.deserialize(serialPath);
+                Log("Deserialized");
                 Log("Parsing...");
                 //Apply Filters
 

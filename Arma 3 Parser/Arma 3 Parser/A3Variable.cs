@@ -28,6 +28,16 @@ namespace Arma_3_Parser
 
         public void processCode()//sort out the name and values from originalCode
         {
+            List<String> value = OriginalCode[0].Split('=').ToList();
+            fieldName = value[0];
+            if (Value.Count > 1)
+                this.Value.Add(value[1].Replace("[]", "").Replace(";", ""));
+            else
+                this.Value = new List<String> { value[1].Replace("[]", "").Replace(";", "") };
+            for(int i = 2; i < Value.Count; i++)
+            {
+                this.Value.Add(value[i].Replace("[]", "").Replace(";", ""));
+            }
 
         }
 

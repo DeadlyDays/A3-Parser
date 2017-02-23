@@ -292,6 +292,10 @@ namespace Arma_3_Parser
             {
                 x.recursiveParseVariables();
             }
+            foreach(A3Variable x in Variables)
+            {
+                x.processCode();
+            }
         }
 
 

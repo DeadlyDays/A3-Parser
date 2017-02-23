@@ -109,8 +109,6 @@ namespace Arma_3_Parser
                                 a3c.ExtendedTree.Add(temp.Substring(loc, length));//add originalcode line
                             else
                                 a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
-                            
-
                         }
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line

@@ -106,6 +106,7 @@
     </Page>
     <Compile Include="A3Class.cs" />
     <Compile Include="A3CppFile.cs" />
+    <Compile Include="A3Presentation.cs" />
     <Compile Include="A3Variable.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

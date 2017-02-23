@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Arma_3_Parser
 {
@@ -105,12 +107,22 @@ namespace Arma_3_Parser
             return file;
         }
 
-        public static void serialize(List<String> fromList, String toFile)
+        public static void serialize(List<A3CppFile> fileList, String toFile)
         {
-
-
+            IFormatter form = new BinaryFormatter();
+            Stream stream = new FileStream(toFile, FileMode.Create, FileAccess.Write, FileShare.None);
+            form.Serialize(stream, fileList);
+            stream.Close();
         }
 
+        public static List<A3CppFile> deserialize(String filePath)
+        {
+            IFormatter form = new BinaryFormatter();
+            Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            List<A3CppFile> list = (List<A3CppFile>)form.Deserialize(stream);
+            stream.Close();
+            return list;
+        }
 
         public static int endOfWord(String line, int startOfWord)
         {
