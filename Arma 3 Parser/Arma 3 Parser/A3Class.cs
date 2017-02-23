@@ -373,7 +373,15 @@ namespace Arma_3_Parser
                     {
                         if(x == list[i].A3ClassName)
                         {
-
+                            if(list[i].Variables.Count > 0)
+                                foreach(A3Variable v in list[i].Variables)//iterate through parents variables
+                                {
+                                    for(int e = 0; e < Variables.Count; e++)//iterate through local variables
+                                    {
+                                        if (v.FieldName == Variables[e].FieldName)
+                                            Variables.Add(v);
+                                    }
+                                }
                         }
                     }
                 }
