@@ -362,6 +362,47 @@ namespace Arma_3_Parser
                 ;
         }
 
+        public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
+        {
+            //for each class in extended tree we are scanning the list for the matching class, 
+            //then we compare variables and add any missing variables
+            if(ExtendedTree.Count > 0)
+                foreach(String x in ExtendedTree)
+                {
+                    for(int i = 0; i < list.Count; i++)//iterates through list of classes in file
+                    {
+                        if(x == list[i].A3ClassName)
+                        {
+
+                        }
+                    }
+                }
+
+            if(SubClasses.Count > 0)
+                foreach(A3Class x in SubClasses)
+                {
+                    x.actualizeInheritance(list);
+                }
+            
+        }
+
+        public List<A3Class> grabAllClasses()
+        {
+            List<A3Class> list = new List<A3Class>();
+
+            if(SubClasses.Count > 0)
+                foreach(A3Class x in SubClasses)
+                {
+                    if (list.Count > 0)
+                        list.Add(x);
+                    else
+                        list = new List<A3Class> { x };
+                    list = list.Concat(x.grabAllClasses()).ToList();//combine the list with current classes list of subclasses
+                }
+            
+            return list;
+        }
+
         public String A3ClassName
         {
             get

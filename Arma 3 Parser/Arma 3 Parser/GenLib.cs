@@ -100,13 +100,13 @@ namespace Arma_3_Parser
             file.buildTrees();
             return file;
         }
-        
+        /*
         public static A3CppFile actualizeInheritanceForClassesInFile(A3CppFile file)//import variables from extended tree
         {
             file.actualizeInheritance();
             return file;
         }
-
+        */
         public static void serialize(List<A3CppFile> fileList, String toFile)
         {
             IFormatter form = new BinaryFormatter();

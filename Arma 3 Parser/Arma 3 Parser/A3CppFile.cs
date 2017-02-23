@@ -16,6 +16,7 @@ namespace Arma_3_Parser
         private List<String> originalCodeLineList;
         private List<String> content;//This is everything between the brackets
         private List<A3Class> a3ClassList;
+        private List<A3Class> a3EntireClassList;
 
         public String OriginalCodeString
         {
@@ -68,6 +69,19 @@ namespace Arma_3_Parser
             set
             {
                 a3ClassList = value;
+            }
+        }
+        public List<A3Class> A3EntireClassList
+        {
+            get
+            {
+                if (a3EntireClassList == null)
+                    return new List<A3Class>();
+                return a3EntireClassList;
+            }
+            set
+            {
+                a3EntireClassList = value;
             }
         }
 
@@ -222,12 +236,13 @@ namespace Arma_3_Parser
             {
                 x.recursiveParseClasses();//sort all the children classes in each class, recursively
             }
+            fillEntireList();
         }
 
         public void stripVariables()//
         {
-            if(a3ClassList.Count > 0)
-            foreach(A3Class x in a3ClassList)
+            if(A3ClassList.Count > 0)
+            foreach(A3Class x in A3ClassList)
             {
                     x.recursiveParseVariables();
             }
@@ -239,14 +254,32 @@ namespace Arma_3_Parser
             foreach(A3Class x in A3ClassList)
             {
                 x.buildNestedTree();
-                x.buildExtendedTree(A3ClassList);
+                x.buildExtendedTree(A3EntireClassList);
                 x.buildInheritanceTree();
             }
+            actualizeInheritance(A3EntireClassList);
         }
 
-        public void actualizeInheritance()//child classes will grab inherited fields from parents
+        public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
         {
+            if(A3ClassList.Count > 0)
+                foreach(A3Class x in A3ClassList)//run for each top level class
+                {
+                    x.actualizeInheritance(list);
+                }
+        }
 
+        public void fillEntireList()//need a list of ALL classes involved including subclasses
+        {
+            
+            if(A3ClassList.Count > 0)
+                foreach(A3Class x in A3ClassList)
+                {
+                    if (A3EntireClassList.Count > 0)
+                        A3EntireClassList = A3EntireClassList.Concat(x.grabAllClasses()).ToList();//Combine lists
+                    else
+                        A3EntireClassList = x.grabAllClasses();
+                }
         }
 
         public String FilePath
