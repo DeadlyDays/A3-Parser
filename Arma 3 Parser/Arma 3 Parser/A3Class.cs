@@ -128,10 +128,13 @@ namespace Arma_3_Parser
                             else
                                 a3c.OriginalCode = new List<String> { cursor };
                         }
-                    if (subClasses != null && Content.Count > 0)
-                        subClasses.Add(a3c);//store class
-                    else
-                        subClasses = new List<A3Class> { a3c };
+                        if (a3c.A3ClassName != null && a3c.A3ClassName != "")
+                        {
+                            if (subClasses != null && Content.Count > 0)
+                                subClasses.Add(a3c);//store class
+                            else
+                                subClasses = new List<A3Class> { a3c };
+                        }
                     a3c = new A3Class();//clear class
                     continue;
                 }
@@ -182,11 +185,14 @@ namespace Arma_3_Parser
                         else
                             a3c.OriginalCode = new List<String> { cursor };
                         depth--;//decrease depth
-                    if (subClasses != null && Content.Count > 0)
-                        subClasses.Add(a3c);//store class
-                    else
-                        subClasses = new List<A3Class> { a3c };
-                    a3c = new A3Class();//clear class
+                        if (a3c.A3ClassName != null && a3c.A3ClassName != "")
+                        {
+                            if (subClasses != null && Content.Count > 0)
+                                subClasses.Add(a3c);//store class
+                            else
+                                subClasses = new List<A3Class> { a3c };
+                            a3c = new A3Class();//clear class
+                        }
                     continue;
                 }
 
@@ -300,7 +306,7 @@ namespace Arma_3_Parser
 
         public void buildNestedTree()
         {
-            if (NestedTree.Count > 0)
+            if (SubClasses.Count > 0)
             {
                 foreach (A3Class x in SubClasses)
                 {
@@ -322,27 +328,28 @@ namespace Arma_3_Parser
             Boolean workLeft = true;
             int place = 0;
             if(ExtendedTree.Count > 0)//only if there is a base class
-            while(workLeft)
-            {
-                String cursor = "";
-                if (ExtendedTree.Count > place)
-                    cursor = ExtendedTree[place];
-                else//break out of the loop if we are no longer looking at anything
-                    break;
-                
-                for (int i = 0; i < list.Count; i++)//Find the base class
+                while(workLeft)
+                {
+                    String cursor = "";
+                    if (ExtendedTree.Count > place)
+                        cursor = ExtendedTree[place];
+                    else//break out of the loop if we are no longer looking at anything
+                        break;
+                    
+                    for (int i = 0; i < list.Count; i++)//Find the base class
                     {
-                        if(list[i].A3ClassName == cursor)
+                        if(list[i].A3ClassName == cursor)//if base class name matches current looked at class in list
                         {
-                            if(list[i].ExtendedTree.Count > 0)
+                            if(list[i].ExtendedTree.Count > 0)//if the looked at class has a base class
                             {
-                                ExtendedTree.Add(list[i].ExtendedTree[0]);
-                                place++;
+                                ExtendedTree.Add(list[i].ExtendedTree[0]);//add the looked at classes base class to current class
+                                place++;//look at the next parent
                                 break;
                             }
                         }
                     }
-            }
+                    place++;//look at the next parent
+                }
             if(SubClasses.Count > 0)
                 foreach(A3Class x in SubClasses)
                 {

@@ -276,9 +276,15 @@ namespace Arma_3_Parser
                 foreach(A3Class x in A3ClassList)
                 {
                     if (A3EntireClassList.Count > 0)
+                    {
+                        A3EntireClassList.Add(x);
                         A3EntireClassList = A3EntireClassList.Concat(x.grabAllClasses()).ToList();//Combine lists
+                    }
                     else
-                        A3EntireClassList = x.grabAllClasses();
+                    {
+                        A3EntireClassList = new List<A3Class> { x };
+                        A3EntireClassList = A3EntireClassList.Concat(x.grabAllClasses()).ToList();//Combine lists
+                    }
                 }
         }
 

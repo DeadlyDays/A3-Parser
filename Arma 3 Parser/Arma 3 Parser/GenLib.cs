@@ -80,6 +80,7 @@ namespace Arma_3_Parser
 
             //Parse all Variables
             file = parseFileClassesForVariables(file);
+            file.buildTrees();
             return file;
         }
 
