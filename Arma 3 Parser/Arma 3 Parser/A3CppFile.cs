@@ -14,7 +14,7 @@ namespace Arma_3_Parser
         private String originalCodeString;
 
         private List<String> originalCodeLineList;
-        private List<String> content;//This is everything between the brackets
+        //private List<String> content;//This is everything between the brackets
         private List<A3Class> a3ClassList;
         private List<A3Class> a3EntireClassList;
 
@@ -45,7 +45,7 @@ namespace Arma_3_Parser
                 originalCodeLineList = value;
             }
         }
-        public List<String> Content
+        /*public List<String> Content
         {
             get
             {
@@ -57,7 +57,7 @@ namespace Arma_3_Parser
             {
                 content = value;
             }
-        }
+        }*/
         public List<A3Class> A3ClassList
         {
             get
@@ -94,19 +94,26 @@ namespace Arma_3_Parser
         }
 
         public void stripClasses()//iterates through originalCodeLineList, for every Top Level class creates a new A3Class, 
-                                  //then calls an A3Class.Method to recursively strip top level classes until all classes have been found
+                                  //then calls an A3Class.Method to recursively strip top level classes within it
+                                  //until all classes have been found
         {
             //current class object
-            A3Class a3c = new A3Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for new class
-            int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as a new class
+            A3Class a3c = new A3Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for
+                                         //new class
+            int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as 
+                           //a new class
+            int bugfix1 = 0;
             for (int i = 0; i < originalCodeLineList.Count; i++)//iterates through originalCodeLintList
             {
+                bugfix1++;
                 String cursor = originalCodeLineList[i];//value of current index of List
                 
+                //Check if empty class declaration at base level
                 if((depth == 0) & (cursor.Contains("class")) && (cursor.Contains(";")))//this is a class that has no contents;
                 {
                     if (cursor.Contains("class"))//found a new class dec
                     {
+                        bugfix1 = 0;
                         String temp = GenLib.stripFormating(cursor);
                         int loc = temp.IndexOf("class");//find where in the line the class keyword starts
                         loc += 6;//find the location where the actuall classname starts
@@ -137,7 +144,8 @@ namespace Arma_3_Parser
                     continue;
                 }
 
-                //First Check, has depth increased
+                //Check, has depth increased
+                //Check, is this an open/close statement, then depth as not increased or decreased
                 if (cursor.Contains("{}"))
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
@@ -145,7 +153,8 @@ namespace Arma_3_Parser
                     else
                         a3c.OriginalCode = new List<String> { cursor };
                 }
-                else if(cursor.Contains("{"))
+                //Check, has depth actually increased
+                else if (cursor.Contains("{"))
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
@@ -160,6 +169,7 @@ namespace Arma_3_Parser
                         depth++;
                 }
                 //check if depth has decreased (can happen on same line)
+                //Check, is this an open/close than depth has not increased or descreased
                 if (cursor.Contains("{}"))
                     ;
                 else if (cursor.Contains("}") && (depth > 1))
@@ -176,6 +186,7 @@ namespace Arma_3_Parser
                     else
                         depth--;
                 }
+                //Check, has depth actually descreased
                 else if(cursor.Contains("}"))//if the depth is 1 and closing, that is the end of this class
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
@@ -191,12 +202,12 @@ namespace Arma_3_Parser
                     continue;
                 }
 
-                //if depth is 0, check for new class dec
+                //Check, check for new nonempty class dec at base level
                 if(depth == 0)
                 {
                     if(cursor.Contains("class"))//found a new class dec
                     {
-                        
+                        bugfix1 = 0;
                         String temp = GenLib.stripFormating(cursor);
                         int loc = temp.IndexOf("class");//find where in the line the class keyword starts
                         loc += 6;//find the location where the actuall classname starts
@@ -220,8 +231,10 @@ namespace Arma_3_Parser
                         else
                             a3c.OriginalCode = new List<String> { cursor };
                     }
-                }
-                else if(a3c.OriginalCode.Count < (i + 1))
+                }/**/
+                 //We need to capture lines of code that are not increased or 
+                //decreased to the code and within the content of the current class being captured
+                else if(a3c.OriginalCode.Count < (bugfix1))
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
@@ -231,8 +244,8 @@ namespace Arma_3_Parser
 
 
             }
-            if(a3ClassList != null)
-            foreach(A3Class x in a3ClassList)
+            if(A3ClassList.Count > 0)
+            foreach(A3Class x in A3ClassList)
             {
                 x.recursiveParseClasses();//sort all the children classes in each class, recursively
             }

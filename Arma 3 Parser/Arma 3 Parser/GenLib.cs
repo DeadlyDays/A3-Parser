@@ -76,10 +76,9 @@ namespace Arma_3_Parser
 
             //Parse all Class's
             file = parseFileForClasses(file);//Find and seperate the classes with their content
-            //Build Inheritance Tree
-
             //Parse all Variables
             file = parseFileClassesForVariables(file);
+            //Build Inheritance Tree
             file.buildTrees();
             return file;
         }

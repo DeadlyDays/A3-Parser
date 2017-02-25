@@ -33,12 +33,30 @@ namespace Arma_3_Parser
 
         public void filterContent()
         {
+            
             if (OriginalCode.Count > 1)
             {
-                content = new List<String>() { originalCode[2] };
-                for (int i = 3; i < (originalCode.Count - 1); i++)
+                int start = 0; int end = 0;
+                for(start = 0; start < OriginalCode.Count; start++)
                 {
-                    content.Add(originalCode[i]);
+                    if(OriginalCode[start].Contains("{"))
+                    {
+                        start++;
+                        break;
+                    }
+                }
+                for(end = (OriginalCode.Count - 1); end >= start; end--)
+                {
+                    if(OriginalCode[end].Contains("}"))
+                    {
+                        end--;
+                        break;
+                    }
+                }
+                content = new List<String> { OriginalCode[start] };
+                for(int i = (start+1); i <= end; i++)
+                {
+                    content.Add(OriginalCode[i]);
                 }
             }
             else
@@ -367,6 +385,11 @@ namespace Arma_3_Parser
                 InheritanceTree = ExtendedTree;
             else
                 ;
+            if(SubClasses.Count > 0)
+                foreach(A3Class x in SubClasses)
+                {
+                    x.buildInheritanceTree();
+                }
         }
 
         public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
