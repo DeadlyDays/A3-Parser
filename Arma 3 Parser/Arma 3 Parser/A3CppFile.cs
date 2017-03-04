@@ -102,18 +102,34 @@ namespace Arma_3_Parser
                                          //new class
             int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as 
                            //a new class
-            int bugfix1 = 0;
-            for (int i = 0; i < originalCodeLineList.Count; i++)//iterates through originalCodeLintList
+            
+            Boolean capped = false;
+
+
+            for (int i = 0; i < originalCodeLineList.Count; i++)//iterates through originalCodeList
             {
-                bugfix1++;
+                capped = false;
                 String cursor = originalCodeLineList[i];//value of current index of List
-                
-                //Check if empty class declaration at base level
-                if((depth == 0) & (cursor.Contains("class")) && (cursor.Contains(";")))//this is a class that has no contents;
+
+                //BUGFIX
+                //If variable dec includes a bunch of code, handle and skip line
+                if (cursor.Contains("=") && cursor.Contains(";"))
                 {
+                    if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                        a3c.OriginalCode.Add(cursor);//add originalcode line
+                    else
+                        a3c.OriginalCode = new List<String> { cursor };
+                    continue;
+                }
+
+                //Check if empty class declaration at base level
+                if ((depth == 0) && (cursor.Contains("class")) && (cursor.Contains(";")))//this is a class that has no contents;
+                {
+                    
+
                     if (cursor.Contains("class"))//found a new class dec
                     {
-                        bugfix1 = 0;
+                        
                         String temp = GenLib.stripFormating(cursor);
                         int loc = temp.IndexOf("class");//find where in the line the class keyword starts
                         loc += 6;//find the location where the actuall classname starts
@@ -131,6 +147,7 @@ namespace Arma_3_Parser
                             else
                                 a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
                         }
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -148,6 +165,7 @@ namespace Arma_3_Parser
                 //Check, is this an open/close statement, then depth as not increased or decreased
                 if (cursor.Contains("{}"))
                 {
+                    capped = true;
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
                     else
@@ -156,6 +174,7 @@ namespace Arma_3_Parser
                 //Check, has depth actually increased
                 else if (cursor.Contains("{"))
                 {
+                    capped = true;
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
                     else
@@ -174,6 +193,7 @@ namespace Arma_3_Parser
                     ;
                 else if (cursor.Contains("}") && (depth > 1))
                 {
+                    capped = true;
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
                     else
@@ -189,16 +209,20 @@ namespace Arma_3_Parser
                 //Check, has depth actually descreased
                 else if(cursor.Contains("}"))//if the depth is 1 and closing, that is the end of this class
                 {
+                    capped = true;
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line
                     else
                         a3c.OriginalCode = new List<String> { cursor };
                     depth--;//decrease depth
-                    if (a3ClassList != null && a3c.OriginalCode.Count > 0)
-                        a3ClassList.Add(a3c);//store class
-                    else
-                        a3ClassList = new List<A3Class> { a3c };
-                    a3c = new A3Class();//clear class
+                    if (a3c.A3ClassName != null && a3c.A3ClassName != "")
+                    {
+                        if (a3ClassList != null && a3c.OriginalCode.Count > 0)
+                            a3ClassList.Add(a3c);//store class
+                        else
+                            a3ClassList = new List<A3Class> { a3c };
+                        a3c = new A3Class();//clear class
+                    }
                     continue;
                 }
 
@@ -207,7 +231,7 @@ namespace Arma_3_Parser
                 {
                     if(cursor.Contains("class"))//found a new class dec
                     {
-                        bugfix1 = 0;
+                        
                         String temp = GenLib.stripFormating(cursor);
                         int loc = temp.IndexOf("class");//find where in the line the class keyword starts
                         loc += 6;//find the location where the actuall classname starts
@@ -226,6 +250,7 @@ namespace Arma_3_Parser
                                 a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
 
                         }
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -234,7 +259,7 @@ namespace Arma_3_Parser
                 }/**/
                  //We need to capture lines of code that are not increased or 
                 //decreased to the code and within the content of the current class being captured
-                else if(a3c.OriginalCode.Count < (bugfix1))
+                else if(!capped)
                 {
                     if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                         a3c.OriginalCode.Add(cursor);//add originalcode line

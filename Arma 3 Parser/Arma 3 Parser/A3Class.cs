@@ -107,19 +107,33 @@ namespace Arma_3_Parser
         }
 
         public void recursiveParseClasses()//parses all the children classes in originalcode and tells each child to do the same
-        {
+        {//strips only the top level and records contents
             filterContent();
             //current class object
             if (OriginalCode.Count <= 1)
                 return;
             A3Class a3c = new A3Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for new class
             int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as a new class
-            if(Content != null)
-            for (int i = 0; i < Content.Count; i++)//iterates through originalCodeLintList
+            Boolean capped = false;//has cursor been captured
+            if (Content != null)
+            for (int i = 0; i < Content.Count; i++)//iterates through originalCodeList
             {
                 String cursor = Content[i];//value of current index of List
+                    capped = false;
 
-                if ((depth == 0) & (cursor.Contains("class")) && (cursor.Contains(";")))//this is a class that has no contents;
+                    //BUGFIX
+                    //If variable dec includes a bunch of code, handle and skip line
+                    if (cursor.Contains("=") && cursor.Contains(";"))
+                    {
+                        if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
+                            a3c.OriginalCode.Add(cursor);//add originalcode line
+                        else
+                            a3c.OriginalCode = new List<String> { cursor };
+                        continue;
+                    }
+
+                    //Is this an Empty Class
+                    if ((depth == 0) && (cursor.Contains("class")) && (cursor.Contains(";")))//this is a class that has no contents;
                 {
                     if (cursor.Contains("class"))//found a new class dec
                     {
@@ -141,6 +155,7 @@ namespace Arma_3_Parser
                                     a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
 
                             }
+                            capped = true;
                             if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                                 a3c.OriginalCode.Add(cursor);//add originalcode line
                             else
@@ -157,9 +172,10 @@ namespace Arma_3_Parser
                     continue;
                 }
 
-                    //First Check, has depth increased
+                //Has depth increased
                 if (cursor.Contains("{}"))
                     {
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -167,6 +183,7 @@ namespace Arma_3_Parser
                     }
                 else if (cursor.Contains("{"))
                 {
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -184,6 +201,7 @@ namespace Arma_3_Parser
                         ;
                 else if (cursor.Contains("}") && (depth > 1))
                 {
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -198,6 +216,7 @@ namespace Arma_3_Parser
                 }
                 else if (cursor.Contains("}"))//if the depth is 1 and closing, that is the end of this class
                 {
+                        capped = true;
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
                         else
@@ -238,13 +257,14 @@ namespace Arma_3_Parser
                                     a3c.ExtendedTree = new List<String> { temp.Substring(loc, length) };
 
                             }
+                            capped = true;
                             if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                                 a3c.OriginalCode.Add(cursor);//add originalcode line
                             else
                                 a3c.OriginalCode = new List<String> { cursor };
                         }
                 }
-                else if(!(cursor.Contains("{") || cursor.Contains("}")))
+                else if(!capped)
                 {
                         if (a3c.OriginalCode != null && a3c.OriginalCode.Count > 0)
                             a3c.OriginalCode.Add(cursor);//add originalcode line
