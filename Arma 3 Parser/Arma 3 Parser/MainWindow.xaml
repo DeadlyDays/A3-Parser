@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arma_3_Parser"
         mc:Ignorable="d"
-        Title="Arma 3 Parser" Height="628.922" Width="1024.349" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Background="#FF919191" Foreground="#FF999999" BorderBrush="#FF510000">
+        Title="Arma 3 Parser" Height="653.922" Width="1024.349" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" Background="#FF919191" Foreground="#FF999999" BorderBrush="#FF510000">
     <Grid Width="1014" Height="458" HorizontalAlignment="Left" VerticalAlignment="Top">
 
         <Label x:Name="lblConfigPath" Content="Path to Config File" Margin="10,5,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
