@@ -416,24 +416,43 @@ namespace Arma_3_Parser
         {
             //for each class in extended tree we are scanning the list for the matching class, 
             //then we compare variables and add any missing variables
-            if(ExtendedTree.Count > 0)
-                foreach(String x in ExtendedTree)
+            List<A3Variable> newVar = new List<A3Variable>();
+            if (ExtendedTree.Count > 0)
+                foreach(String x in ExtendedTree)//Iterate through list of base classes
                 {
-                    for(int i = 0; i < list.Count; i++)//iterates through list of classes in file
+                    for(int i = 0; i < list.Count; i++)//iterates through provided list
                     {
-                        if(x == list[i].A3ClassName)
+                        if(x == list[i].A3ClassName)//if thre is a name match between the base class and the provided list
                         {
-                            if(list[i].Variables.Count > 0)
-                                foreach(A3Variable v in list[i].Variables)//iterate through parents variables
+                            if(list[i].Variables.Count > 0)//are there any variables
+                                foreach(A3Variable v in list[i].Variables)//iterate through variables of selected class of provided list
                                 {
-                                    for(int e = 0; e < Variables.Count; e++)//iterate through local variables
+                                    Boolean match = false;
+                                    //int matchNum = 0;
+                                    for(int e = 1; e < (Variables.Count - 1); e++)//iterate through local variables
                                     {
-                                        if (v.FieldName == Variables[e].FieldName)
-                                            Variables.Add(v);
+                                        if (v.FieldName == Variables[e].FieldName)//if there is a match
+                                        {
+                                            match = true;
+                                            break;//get out, if there is a match we don't care anymore about it
+                                        }
+                                    }
+                                    if(!match)//if there is no match
+                                    {
+                                        if (newVar != null)
+                                            newVar.Add(v);
+                                        else
+                                            newVar = new List<A3Variable> { v };
+                                        
                                     }
                                 }
                         }
                     }
+                }
+            if(newVar != null)
+                foreach (A3Variable v in newVar)
+                {
+                    Variables.Add(v);
                 }
 
             if(SubClasses.Count > 0)
