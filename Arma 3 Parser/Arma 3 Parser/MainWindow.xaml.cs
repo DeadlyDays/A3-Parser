@@ -339,15 +339,58 @@ namespace Arma_3_Parser
                 
                 Log("Deserializing...");
                 //Deserialize objects to parse
-                List<A3CppFile> list = GenLib.deserialize(serialPath);
+                List<A3CppFile> flist = GenLib.deserialize(serialPath);
                 Log("Deserialized");
                 Log("Parsing...");
+                //create list of all classes
+                List<A3Class> list = new List<A3Class>();
+
+                if(flist != null)
+                    foreach(A3CppFile f in flist)
+                        if(f.A3EntireClassList != null)
+                            foreach(A3Class c in f.A3EntireClassList)
+                            {
+                                if (list != null)
+                                    list.Add(c);
+                                else
+                                    list = new List<A3Class> { c };
+                            }
+
                 //Apply Filters
                 List<String> outputList = new List<String>();
 
+                list = A3Presentation.filterOutClassByPartialName(list, txtNotContainPartClass.Text.Split(';'));
 
+                list = A3Presentation.filterInClassByPartialName(list, txtContainPartClass.Text.Split(';'));
 
+                list = A3Presentation.filterInClassByDirectParent(list, txtHasDirectParent.Text.Split(';'));
+
+                list = A3Presentation.filterInClassByAnyParent(list, txtHasParent.Text.Split(';'));
+
+                list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
+
+                outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
+
+                outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
                 Log("Parsed");
+                //Build Output
+                Log("Creating File...");
+                String output = "";
+                foreach(String s in outputList)
+                {
+                    output += s;
+                }
+
+                //Create Output File
+
+                using (StreamWriter sw = File.CreateText(txtOutputPath.Text))
+                {
+                    sw.WriteLine(output);
+                }
+                Log("File Created At: " + txtOutputPath.Text);
+                
             }
 
         }

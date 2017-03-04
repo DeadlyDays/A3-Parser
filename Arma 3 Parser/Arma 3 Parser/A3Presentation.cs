@@ -131,46 +131,239 @@ namespace Arma_3_Parser
         }
 
         //Display only these Fields
-        public static List<String> outputSelectedFields(List<A3Class> list, String[] input)
+        public static List<String> outputSelectedFields(List<A3Class> list, String[] input,
+            Boolean outputClassName, Boolean outputParentClass, Boolean outputBaseClass,
+            Boolean outputSource)
         {
-
-            return new List<String>();
+            //Create a list of only classes with selected variables
+            List<A3Class> select = new List<A3Class>();
+            if (list.Count > 0)
+                for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
+                {
+                    for (int e = 0; e < input.Length; e++)//iterate through input
+                    {
+                        if (list[i].Variables != null)
+                            for (int z = 0; z < list[i].Variables.Count; z++)//iterate through Variables
+                            {
+                                if (list[i].Variables[z].FieldName == input[e])//if field name matches any of the inputs
+                                {
+                                    if (select != null)
+                                        select.Add(list[i]);
+                                    else
+                                        select = new List<A3Class> { list[i] };
+                                    goto leave;//break out of loop, we already know to include this item
+                                }
+                            }
+                    }
+                leave:;
+                }
+            select.Reverse();
+            List<String> output = new List<String>();
+            String cursor = "";
+            if (outputClassName || outputParentClass || outputBaseClass)
+            {
+                if (outputClassName)
+                {
+                    if (cursor != "")
+                        cursor += "," + "ClassName";
+                    else
+                        cursor += "ClassName";
+                }
+                if (outputParentClass)
+                {
+                    if (cursor != "")
+                        cursor += "," + "ParentClass";
+                    else
+                        cursor += "ParentClass";
+                }
+                if (outputBaseClass)
+                {
+                    if (cursor != "")
+                        cursor += "," + "BaseClass";
+                    else
+                        cursor += "BaseClass";
+                }
+            }
+            foreach(String s in input)
+            {
+                if (cursor != "")
+                    cursor += "," + input;
+                else
+                    cursor += input;
+            }
+            
+            //Create a list of strings with inputs as output
+            if(select != null)
+                foreach (A3Class c in select)//iterate through class
+                {
+                    if (outputClassName)
+                    {
+                        if (cursor != "")
+                            cursor += "," + c.A3ClassName;
+                        else
+                            cursor += c.A3ClassName;
+                    }
+                    if (outputParentClass)
+                    {
+                        if (c.NestedTree != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.NestedTree[0];
+                            else
+                                cursor += c.NestedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    if (outputBaseClass)
+                    {
+                        if (c.ExtendedTree != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.ExtendedTree[0];
+                            else
+                                cursor += c.ExtendedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    cursor = "";
+                    if(c.Variables != null)
+                        foreach (A3Variable v in c.Variables)//iterate through classes variables
+                        {
+                            if(input != null)   
+                                foreach (String s in input)//iterate through input values
+                                {
+                                    if (v.FieldName.Equals(input))//if fieldname matches input, add
+                                    {
+                                        if (cursor != "")
+                                            cursor += "," + v.Value[0];
+                                        else
+                                            cursor += v.Value[0];
+                                    }
+                                    else
+                                        cursor += ",";               
+                                }   
+                        }
+                    if (outputSource)
+                    {
+                        cursor += " \nClass Source:,";
+                        foreach (String s in c.OriginalCode)
+                        {
+                            cursor += s;
+                        }
+                    }
+                    if (output != null)
+                        output.Add(cursor + " \n");
+                    else
+                        output = new List<String> { cursor + " \n"};
+                }
+            return output;
         }
 
         //Display All fields
-        public static List<String> outputAllFields(List<A3Class> list)
+        public static List<String> outputAllFields(List<A3Class> list, Boolean outputClassName, 
+            Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource)
         {
+            List<String> output = new List<String>();
+            String cursor = "";
+            if (outputClassName || outputParentClass || outputBaseClass)
+            {
+                if (outputClassName)
+                {
+                    if (cursor != "")
+                        cursor += "," + "ClassName";
+                    else
+                        cursor += "ClassName";
+                }
+                if (outputParentClass)
+                {
+                    if (cursor != "")
+                        cursor += "," + "ParentClass";
+                    else
+                        cursor += "ParentClass";
+                }
+                if (outputBaseClass)
+                {
+                    if (cursor != "")
+                        cursor += "," + "BaseClass";
+                    else
+                        cursor += "BaseClass";
+                }
+            }
+            if(list != null)
+                foreach(A3Class c in list)
+                {
+                    if(c.Variables != null)
+                        foreach(A3Variable v in c.Variables)
+                        {
+                            if (cursor != "")
+                                cursor += "," + v.FieldName;
+                            else
+                                cursor += v.FieldName;
+                        }
+                }
+            
+            //Create a list of strings with inputs as output
+            if (list != null)
+                foreach (A3Class c in list)//iterate through class
+                {
+                    if(outputClassName)
+                    {
+                        if (cursor != "")
+                            cursor += "," + c.A3ClassName;
+                        else
+                            cursor += c.A3ClassName;
+                    }
+                    if(outputParentClass)
+                    {
+                        if (c.NestedTree != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.NestedTree[0];
+                            else
+                                cursor += c.NestedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    if(outputBaseClass)
+                    {
+                        if (c.ExtendedTree != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.ExtendedTree[0];
+                            else
+                                cursor += c.ExtendedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    cursor = "";
+                    if (c.Variables != null)
+                        foreach (A3Variable v in c.Variables)//iterate through classes variables
+                        {
+                            if (cursor != "")
+                                cursor += "," + v.Value[0];
+                            else
+                                cursor += v.Value[0];
+                        }
+                    if (outputSource)
+                    {
+                        cursor += " \nClass Source:,";
+                        foreach(String s in c.OriginalCode)
+                        {
+                            cursor += s;
+                        }
+                    }
+                    if (output != null)
+                        output.Add(cursor + " \n");
+                    else
+                        output = new List<String> { cursor + " \n" };
+                }
 
-            return new List<String>();
+            return output;
         }
-
-        //Display ClassName
-        public static List<String> outputClassName(List<String> list)
-        {
-
-            return new List<String>();
-        }
-
-        //Display Parent(nested) Class
-        public static List<String> outputParentClass(List<String> list)
-        {
-
-            return new List<String>();
-        }
-
-        //Display Base(extended) Class
-        public static List<String> outputBaseClass(List<String> list)
-        {
-
-            return new List<String>();
-        }
-
-        //Display Source Code
-        public static List<String> outputSource(List<String> list)
-        {
-
-            return new List<String>();
-        }
-
+        
     }
 }

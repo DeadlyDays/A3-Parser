@@ -48,6 +48,8 @@
         <TextBox x:Name="txtCfgConvertPath" Height="35" Margin="17,487,0,-64" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="327" VerticalAlignment="Top"/>
         <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="350,500,0,-64" x:Name="btnBrowseCFGConvert" VerticalAlignment="Top" Width="88" Click="btnBrowseCFGConvert_Click" />
 
+        <Label x:Name="lblClassFilters" Content="Class Filters" HorizontalAlignment="Left" Margin="443,0,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        
         <Label x:Name="lblNotContainPartClass" Content="Class Name NOT Contain Part Of Any:" Margin="443,20,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
         <Label x:Name="lblNote1" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,35,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
         <TextBox x:Name="txtNotContainPartClass" Margin="443,60,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
@@ -64,19 +66,21 @@
         <Label x:Name="lblNote4" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,274,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
         <TextBox x:Name="txtHasParent" Margin="443,299,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblContainsFields" Content="Field Name Contains Any Field Of:" Margin="442,341,0,0" Width="357" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote5" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,356,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtContainsFields" Margin="442,381,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <Label x:Name="lblFieldFilters" Content="Field Filters" HorizontalAlignment="Left" Margin="442,341,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        
+        <Label x:Name="lblContainsFields" Content="Field Name Contains Any Field Of:" Margin="442,363,0,0" Width="357" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote5" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="442,378,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtContainsFields" Margin="442,403,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblDisplayFields" Content="Display Fields:" Margin="443,422,0,0" Width="313" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
-        <Label x:Name="lblNote6" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,436,0,-3" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtDisplayFields" Margin="443,461,0,-41" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <Label x:Name="lblDisplayFields" Content="Display Fields:" Margin="443,444,0,-11" Width="313" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
+        <Label x:Name="lblNote6" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,458,0,-25" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtDisplayFields" Margin="443,483,0,-63" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
 
-        <CheckBox x:Name="cbShowClassName" Content="Show Class Name?"  Margin="443,511,0,-71" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbShowParentClass" Content="Show Parent Class?"  Margin="599,511,0,-71" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbShowBaseClass" Content="Show Base Class?"  Margin="443,535,0,-95" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbOutputSource" Content="Output Source?"  Margin="599,535,0,-95" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox x:Name="cbDisplayAllFields" Content="Display All Fields?"  Margin="443,558,0,-118" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowClassName" Content="Show Class Name?"  Margin="443,533,0,-93" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowParentClass" Content="Show Parent Class?"  Margin="599,533,0,-93" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowBaseClass" Content="Show Base Class?"  Margin="443,557,0,-117" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbOutputSource" Content="Output Source?"  Margin="599,557,0,-117" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbDisplayAllFields" Content="Display All Fields?"  Margin="443,580,0,-140" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <Label x:Name="lblStatus" Content="Status Log:" HorizontalAlignment="Left" Margin="813,10,0,0" VerticalAlignment="Top"/>
         <RichTextBox x:Name="rtxtStatus" HorizontalAlignment="Left" Height="468" Margin="813,35,0,-45" VerticalAlignment="Top" Width="170" IsEnabled="False">
@@ -88,7 +92,8 @@
         </RichTextBox>
 
         <Button x:Name="btnProcess" Content="Process" Height="46" Margin="14,523,0,-111" Width="240" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnProcess_Click"/>
-        <Label x:Name="lblClassFilters" Content="Class Filters" HorizontalAlignment="Left" Margin="443,3,0,0" VerticalAlignment="Top"/>
+        
+        
 
     </Grid>
 </Window>
