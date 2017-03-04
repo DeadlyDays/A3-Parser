@@ -129,7 +129,7 @@ namespace Arma_3_Parser
             int end = line.Length;
             for (int i = startOfWord; i < line.Length; i++)
             {
-                if (line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
+                if (line[i].Equals(' ') || line[i].Equals(':') || line[i].Equals(';') || line[i].Equals('\\') || line[i].Equals('/') || line[i].Equals('{') || line[i].Equals('['))
                     return i;
             }
             return end;
@@ -137,10 +137,11 @@ namespace Arma_3_Parser
 
         public static int startOfNextWord(String line, int startLoc)
         {
+            
             int result = startLoc;
             for (int i = startLoc; i < line.Length; i++)
             {
-                if (line[i].Equals(" ") || line[i].Equals(":") || line[i].Equals(";") || line[i].Equals("\\") || line[i].Equals("/") || line[i].Equals("{") || line[i].Equals("["))
+                if (line[i].Equals(' ') || line[i].Equals(':') || line[i].Equals(';') || line[i].Equals('\\') || line[i].Equals('/') || line[i].Equals('{') || line[i].Equals('['))
                     ;
                 else
                     return i;

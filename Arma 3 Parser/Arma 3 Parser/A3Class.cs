@@ -139,7 +139,7 @@ namespace Arma_3_Parser
                     {
                         String temp = GenLib.stripFormating(cursor);
                         int loc = temp.IndexOf("class");//find where in the line the class keyword starts
-                        loc += 6;//find the location where the actuall classname starts
+                        loc += 6;//find the location where the actual classname starts
                         int end = GenLib.endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
                         a3c = new A3Class(temp.Substring(loc, length));//grab the className;
