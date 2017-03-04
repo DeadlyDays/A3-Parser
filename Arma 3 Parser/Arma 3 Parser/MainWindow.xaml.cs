@@ -343,6 +343,9 @@ namespace Arma_3_Parser
                 Log("Deserialized");
                 Log("Parsing...");
                 //Apply Filters
+                List<String> outputList = new List<String>();
+
+
 
                 Log("Parsed");
             }
