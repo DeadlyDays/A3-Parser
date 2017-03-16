@@ -414,9 +414,15 @@ namespace Arma_3_Parser
 
         public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
         {
+            //list is all the classes in the file this class exists in
+
+
             //for each class in extended tree we are scanning the list for the matching class, 
             //then we compare variables and add any missing variables
             List<A3Variable> newVar = new List<A3Variable>();
+
+            // MAJOR BOTTLENECK
+            ///*
             if (ExtendedTree.Count > 0)
                 foreach(String x in ExtendedTree)//Iterate through list of base classes
                 {
@@ -449,11 +455,17 @@ namespace Arma_3_Parser
                         }
                     }
                 }
+            //*/
+
+
+
             if(newVar != null)
                 foreach (A3Variable v in newVar)
                 {
                     Variables.Add(v);
                 }
+
+            newVar = new List<A3Variable>();//clear memory
 
             if(SubClasses.Count > 0)
                 foreach(A3Class x in SubClasses)

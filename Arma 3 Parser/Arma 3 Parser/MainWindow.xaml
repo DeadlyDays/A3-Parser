@@ -52,7 +52,7 @@
         
         <Label x:Name="lblNotContainPartClass" Content="Class Name NOT Contain Part Of Any:" Margin="443,20,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
         <Label x:Name="lblNote1" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,35,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtNotContainPartClass" Margin="443,60,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtNotContainPartClass" Margin="443,60,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="357" Height="38" VerticalAlignment="Top" />
 
         <Label x:Name="lblContainPartClass" Content="Class Name Contain Part Of Any:" Margin="443,104,0,0" Width="356" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top"/>
         <Label x:Name="lblNote2" Content="Separate values with a semicolon. (Ex. value1;value2;value3)" Margin="443,119,0,0" HorizontalAlignment="Left" Width="357" Height="25" VerticalAlignment="Top"/>

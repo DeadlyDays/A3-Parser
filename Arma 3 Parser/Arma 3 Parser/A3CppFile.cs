@@ -289,13 +289,15 @@ namespace Arma_3_Parser
         public void buildTrees()//populate extended and nested tree's
         {
             if(A3ClassList.Count > 0)
-            foreach(A3Class x in A3ClassList)
+            foreach(A3Class x in A3ClassList)//iterates through the top level classes
             {
+                    //each of these will have the class call its own build tree file, then recursively have its own
+                    //  subclasses do the same thing
                 x.buildNestedTree();
                 x.buildExtendedTree(A3EntireClassList);
                 x.buildInheritanceTree();
             }
-            actualizeInheritance(A3EntireClassList);
+            //actualizeInheritance(A3EntireClassList); //Performance Hog
         }
 
         public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
@@ -303,7 +305,7 @@ namespace Arma_3_Parser
             if(A3ClassList.Count > 0)
                 foreach(A3Class x in A3ClassList)//run for each top level class
                 {
-                    x.actualizeInheritance(list);
+                    x.actualizeInheritance(list);//have each class do its thing and recursively have its sub classes doit
                 }
         }
 
