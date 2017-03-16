@@ -14,17 +14,41 @@ namespace Arma_3_Parser
     {
         public static List<String> binList(String path)//create a list of bin files
         {
-            return System.IO.Directory.GetFiles(path, "config.bin", System.IO.SearchOption.AllDirectories).ToList();
+            path = path.Replace("config.bin", "");
+            if (System.IO.Directory.Exists(path))
+                return System.IO.Directory.GetFiles(path, "config.bin", System.IO.SearchOption.AllDirectories).ToList();
+            else
+            {
+                System.IO.Directory.CreateDirectory(path);
+                return System.IO.Directory.GetFiles(path, "config.bin", System.IO.SearchOption.AllDirectories).ToList();
+            }
+            
         }
         
         public static List<String> pboList(String path)//create a list of pbo files
         {
-            return System.IO.Directory.GetFiles(path, "*pbo", System.IO.SearchOption.AllDirectories).ToList();
+
+            if(System.IO.Directory.Exists(path))
+                return System.IO.Directory.GetFiles(path, "*pbo", System.IO.SearchOption.AllDirectories).ToList();
+            else
+            {
+                System.IO.Directory.CreateDirectory(path);
+                return System.IO.Directory.GetFiles(path, "*pbo", System.IO.SearchOption.AllDirectories).ToList();
+            }
         }
 
         public static List<String> cppList(String path)//create a list of cpp files
         {
-            return System.IO.Directory.GetFiles(path, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
+            path = path.Replace("config.cpp", "");
+            if (System.IO.Directory.Exists(path))
+            {
+                return System.IO.Directory.GetFiles(path, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
+            }
+            else
+            {
+                System.IO.Directory.CreateDirectory(path);
+                return System.IO.Directory.GetFiles(path, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
+            }
         }
 
         public static List<String> extract(String fromPath, String toPath, String BankRev)//extract a list of .pbo's into .bin's at a location from a location(and all subfolders)
