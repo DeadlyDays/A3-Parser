@@ -59,7 +59,7 @@ namespace Arma_3_Parser
                 {
                     for (int e = 0; e < input.Length; e++)//iterate through input
                     {
-                        if (list[i].InheritanceTree != null)
+                        if (list[i].InheritanceTree != null && list[i].InheritanceTree.Count > 0)
                             if (list[i].InheritanceTree[0] == input[e])//if the direct parent matches any of the inputs
                             {
                                 if (output != null)
@@ -187,13 +187,23 @@ namespace Arma_3_Parser
             foreach(String s in input)
             {
                 if (cursor != "")
-                    cursor += "," + input;
+                    cursor += "," + s;
                 else
-                    cursor += input;
+                    cursor += s;
             }
-            
+            if (output != null)
+            {
+                output.Add(cursor + " \n");
+                cursor = "";
+            }
+            else
+            {
+                output = new List<String> { cursor + " \n" };
+                cursor = "";
+            }
+
             //Create a list of strings with inputs as output
-            if(select != null)
+            if (select != null)
                 foreach (A3Class c in select)//iterate through class
                 {
                     if (outputClassName)
@@ -227,36 +237,58 @@ namespace Arma_3_Parser
                         else
                             cursor += ",";
                     }
-                    cursor = "";
-                    if(c.Variables != null)
-                        foreach (A3Variable v in c.Variables)//iterate through classes variables
+                    
+                    if(input != null)
+                        foreach (String s in input)//iterate through classes variables
                         {
-                            if(input != null)   
-                                foreach (String s in input)//iterate through input values
+                            Boolean check = false;
+                            if(c.Variables != null)   
+                                foreach (A3Variable v in c.Variables)//iterate through input values
                                 {
-                                    if (v.FieldName.Equals(input))//if fieldname matches input, add
+                                    if (v.FieldName == s)//if fieldname matches input, add
                                     {
-                                        if (cursor != "")
-                                            cursor += "," + v.Value[0];
+                                        if(v.Value[0].Contains("\""))
+                                        {
+                                            if (cursor != "")
+                                                cursor += "," + v.Value[0];
+                                            else
+                                                cursor += v.Value[0];
+                                        }
                                         else
-                                            cursor += v.Value[0];
+                                        {
+                                            if (cursor != "")
+                                                cursor += ",\"" + v.Value[0] + "\"";
+                                            else
+                                                cursor += "\"" + v.Value[0] + "\"";
+                                        }
+                                        
+                                        check = true;
                                     }
-                                    else
-                                        cursor += ",";               
-                                }   
+                                               
+                                }
+                            if (!check)
+                                cursor += ",";
                         }
                     if (outputSource)
                     {
-                        cursor += " \nClass Source:,";
+                        cursor += " \nClass Source:\n\"";
                         foreach (String s in c.OriginalCode)
                         {
-                            cursor += s;
+                            cursor += s.Replace("\"", "'").Replace("\n", "").Replace("\r", "");
                         }
+                        cursor += "\"";
                     }
                     if (output != null)
+                    {
                         output.Add(cursor + " \n");
+                        cursor = "";
+                    }
                     else
-                        output = new List<String> { cursor + " \n"};
+                    {
+                        output = new List<String> { cursor + " \n" };
+                        cursor = "";
+                    }
+
                 }
             return output;
         }
@@ -266,8 +298,8 @@ namespace Arma_3_Parser
             Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource)
         {
             List<String> output = new List<String>();
-            String cursor = "";
-            if (outputClassName || outputParentClass || outputBaseClass)
+            String cursor = "";//Current string to be added
+            if (outputClassName || outputParentClass || outputBaseClass)//Column Names to be added
             {
                 if (outputClassName)
                 {
@@ -291,19 +323,42 @@ namespace Arma_3_Parser
                         cursor += "BaseClass";
                 }
             }
-            if(list != null)
+            List<String> variableList = new List<String>();//List of fields
+            if(list != null)//Column Names to be added
                 foreach(A3Class c in list)
                 {
                     if(c.Variables != null)
                         foreach(A3Variable v in c.Variables)
                         {
-                            if (cursor != "")
-                                cursor += "," + v.FieldName;
+                            if (variableList != null)//if variableList isn't empty
+                                if (variableList.Contains(v.FieldName))//if variableList already has this field
+                                    ;//do nothing
+                                else//variable list isn't empty and doesn't have this field yet
+                                {
+                                    variableList.Add(v.FieldName);//add variable name to list
+
+                                    if (cursor != "")//add variable name to column list
+                                        cursor += "," + v.FieldName;
+                                    else
+                                        cursor += v.FieldName;
+                                }
                             else
-                                cursor += v.FieldName;
+                                ;
+
+                            
                         }
                 }
-            
+            if (output != null)
+            {
+                output.Add(cursor + " \n");
+                cursor = "";
+            }
+            else
+            {
+                output = new List<String> { cursor + " \n" };
+                cursor = "";
+            }
+
             //Create a list of strings with inputs as output
             if (list != null)
                 foreach (A3Class c in list)//iterate through class
@@ -329,7 +384,7 @@ namespace Arma_3_Parser
                     }
                     if(outputBaseClass)
                     {
-                        if (c.ExtendedTree != null)
+                        if (c.ExtendedTree != null && c.ExtendedTree.Count > 0)
                         {
                             if (cursor != "")
                                 cursor += "," + c.ExtendedTree[0];
@@ -339,15 +394,48 @@ namespace Arma_3_Parser
                         else
                             cursor += ",";
                     }
-                    cursor = "";
+                    //cursor = "";//idk why this was here....left over?
                     if (c.Variables != null)
-                        foreach (A3Variable v in c.Variables)//iterate through classes variables
+                    {
+                        Boolean check = false;
+                        foreach(String s in variableList)//iterate through the variables
                         {
-                            if (cursor != "")
-                                cursor += "," + v.Value[0];
-                            else
-                                cursor += v.Value[0];
+                            check = false;
+                            foreach (A3Variable v in c.Variables)//iterate through classes variables
+                            {
+                                if(v.FieldName == s)//Variable in class == variable in variableList
+                                {
+                                    //add variable
+                                    if (cursor != "")
+                                    {
+                                        if (v.Value[0].Contains("\""))
+                                        {
+                                            cursor += "," + v.Value[0];
+                                        }
+                                        else
+                                            cursor += ",\"" + v.Value[0] + "\"";
+                                    }
+                                        
+                                    else
+                                    {
+                                        if (v.Value[0].Contains("\""))
+                                        {
+                                            cursor += v.Value[0];
+                                        }
+                                        else
+                                            cursor += "\"" + v.Value[0] + "\"";
+                                    }
+                                    
+                                    check = true;
+                                    //break loop
+                                    break;
+                                }
+                                
+                            }
+                            if (!check)//if we haven't added a value, we need an empty delimiter
+                                cursor += ",";
                         }
+                    }
                     if (outputSource)
                     {
                         cursor += " \nClass Source:,";
@@ -357,9 +445,15 @@ namespace Arma_3_Parser
                         }
                     }
                     if (output != null)
+                    { 
                         output.Add(cursor + " \n");
+                        cursor = "";
+                    }
                     else
+                    { 
                         output = new List<String> { cursor + " \n" };
+                        cursor = "";
+                    }
                 }
 
             return output;

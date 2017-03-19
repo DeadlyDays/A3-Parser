@@ -307,8 +307,19 @@ namespace Arma_3_Parser
 
                 ///MultiThread
                 ///
-                
+                //Clear null files
+                for (int i = 0; i < cppList.Count; i++)
+                {
+                    if (cppList[i] == null)
+                    {
+                        cppList.Remove(cppList[i]);
+                        i--;
+                    }
+                }
+
+
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
+                
                 Parallel.For(0,
                     (cppList.Count - 1),/* new ParallelOptions
                     {
@@ -316,7 +327,8 @@ namespace Arma_3_Parser
                     },*/
                     a =>
                 {
-                    fileArray[a] = GenLib.parseFile(cppList[a]);
+                    A3CppFile tempArray = GenLib.parseFile(cppList[a]);
+                    fileArray[a] = tempArray;
                 });
                 ///SingleThread
                 ///
@@ -347,33 +359,36 @@ namespace Arma_3_Parser
                 List<A3Class> list = new List<A3Class>();
 
                 if(flist != null)
-                    foreach(A3CppFile f in flist)
-                        if(f.A3EntireClassList != null)
-                            foreach(A3Class c in f.A3EntireClassList)
-                            {
-                                if (list != null)
-                                    list.Add(c);
-                                else
-                                    list = new List<A3Class> { c };
-                            }
-
+                    for(int i = 0; i < flist.Count; i++)
+                    {
+                        if(flist[i] != null)
+                            if(flist[i].A3EntireClassList != null)
+                                foreach(A3Class c in flist[i].A3EntireClassList)
+                                {
+                                    if (list != null)
+                                        list.Add(c);
+                                    else
+                                        list = new List<A3Class> { c };
+                                }
+                    }
+                
                 //Apply Filters
                 List<String> outputList = new List<String>();
-
-                list = A3Presentation.filterOutClassByPartialName(list, txtNotContainPartClass.Text.Split(';'));
-
-                list = A3Presentation.filterInClassByPartialName(list, txtContainPartClass.Text.Split(';'));
-
-                list = A3Presentation.filterInClassByDirectParent(list, txtHasDirectParent.Text.Split(';'));
-
-                list = A3Presentation.filterInClassByAnyParent(list, txtHasParent.Text.Split(';'));
-
-                list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
-
-                outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
+                if(txtNotContainPartClass.Text != "")
+                    list = A3Presentation.filterOutClassByPartialName(list, txtNotContainPartClass.Text.Split(';'));
+                if (txtContainPartClass.Text != "")
+                    list = A3Presentation.filterInClassByPartialName(list, txtContainPartClass.Text.Split(';'));
+                if (txtHasDirectParent.Text != "")
+                    list = A3Presentation.filterInClassByDirectParent(list, txtHasDirectParent.Text.Split(';'));
+                if (txtHasParent.Text != "")
+                    list = A3Presentation.filterInClassByAnyParent(list, txtHasParent.Text.Split(';'));
+                if (txtContainsFields.Text != "")
+                    list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
+                if (txtDisplayFields.Text != "")
+                    outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
                     cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
-
-                outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
+                if (cbDisplayAllFields.IsChecked.Value)
+                    outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
                     cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
                 Log("Parsed");
                 //Build Output
