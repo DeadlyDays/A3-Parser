@@ -10,7 +10,7 @@ namespace Arma_3_Parser
     class A3
     {
         private List<A3CppFile> fileList;//List of A3 Files
-        private List<A3Class> classList;//Lisdt of all A3 Classes
+        private List<A3Level2Class> classList;//Lisdt of all A3 Classes
 
         A3()
         {
@@ -30,12 +30,12 @@ namespace Arma_3_Parser
                 fileList = value;
             }
         }
-        public List<A3Class> ClassList
+        public List<A3Level2Class> ClassList
         {
             get
             {
                 if (classList == null)
-                    return new List<A3Class>();
+                    return new List<A3Level2Class>();
                 return classList;
             }
             set
@@ -58,14 +58,14 @@ namespace Arma_3_Parser
             else
                 fileList = files;
         }
-        public void addClass(A3Class a3Class)
+        public void addClass(A3Level2Class a3Class)
         {
             if (classList != null)
                 classList.Add(a3Class);
             else
-                classList = new List<A3Class> { a3Class };
+                classList = new List<A3Level2Class> { a3Class };
         }
-        public void addClasses(List<A3Class> a3Classes)
+        public void addClasses(List<A3Level2Class> a3Classes)
         {
             if (classList != null)
                 classList.AddRange(a3Classes);

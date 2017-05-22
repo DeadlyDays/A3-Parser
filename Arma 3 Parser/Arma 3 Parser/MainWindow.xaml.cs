@@ -356,19 +356,19 @@ namespace Arma_3_Parser
                 Log("Deserialized");
                 Log("Parsing...");
                 //create list of all classes
-                List<A3Class> list = new List<A3Class>();
+                List<A3Level2Class> list = new List<A3Level2Class>();
 
                 if(flist != null)
                     for(int i = 0; i < flist.Count; i++)
                     {
                         if(flist[i] != null)
                             if(flist[i].A3EntireClassList != null)
-                                foreach(A3Class c in flist[i].A3EntireClassList)
+                                foreach(A3Level2Class c in flist[i].A3EntireClassList)
                                 {
                                     if (list != null)
                                         list.Add(c);
                                     else
-                                        list = new List<A3Class> { c };
+                                        list = new List<A3Level2Class> { c };
                                 }
                     }
                 
