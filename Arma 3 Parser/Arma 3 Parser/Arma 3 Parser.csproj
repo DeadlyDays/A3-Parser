@@ -104,7 +104,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="A3.cs" />
-    <Compile Include="A3Class.cs" />
+    <Compile Include="A3Level2Class.cs" />
     <Compile Include="A3CppFile.cs" />
     <Compile Include="A3Level1Class.cs" />
     <Compile Include="A3Presentation.cs" />
