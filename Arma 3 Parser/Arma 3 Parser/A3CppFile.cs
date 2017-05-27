@@ -15,8 +15,8 @@ namespace Arma_3_Parser
 
         private List<String> originalCodeLineList;
         //private List<String> content;//This is everything between the brackets
-        private List<A3Level2Class> a3ClassList;
-        private List<A3Level2Class> a3EntireClassList;
+        private List<A3Class> a3ClassList;
+        private List<A3Class> a3EntireClassList;
 
         public String OriginalCodeString
         {
@@ -58,12 +58,12 @@ namespace Arma_3_Parser
                 content = value;
             }
         }*/
-        public List<A3Level2Class> A3ClassList
+        public List<A3Class> A3ClassList
         {
             get
             {
                 if (a3ClassList == null)
-                    return new List<A3Level2Class>();
+                    return new List<A3Class>();
                 return a3ClassList;
             }
             set
@@ -71,12 +71,12 @@ namespace Arma_3_Parser
                 a3ClassList = value;
             }
         }
-        public List<A3Level2Class> A3EntireClassList
+        public List<A3Class> A3EntireClassList
         {
             get
             {
                 if (a3EntireClassList == null)
-                    return new List<A3Level2Class>();
+                    return new List<A3Class>();
                 return a3EntireClassList;
             }
             set
@@ -98,7 +98,7 @@ namespace Arma_3_Parser
                                   //until all classes have been found
         {
             //current class object
-            A3Level1Class a3c = new A3Level1Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for
+            A3Class a3c = new A3Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for
                                          //new class
             int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as 
                            //a new class
@@ -135,7 +135,7 @@ namespace Arma_3_Parser
                         loc += 6;//find the location where the actuall classname starts
                         int end = GenLib.endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c = new A3Level1Class(temp.Substring(loc, length));//grab the className;
+                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
                         if (cursor.Contains(":"))//does this class extend a base class
                         {
                             loc = temp.IndexOf(":");
@@ -156,8 +156,8 @@ namespace Arma_3_Parser
                     if (a3ClassList != null && a3c.OriginalCode.Count > 0)
                         a3ClassList.Add(a3c);//store class
                     else
-                        a3ClassList = new List<A3Level2Class> { a3c };
-                    a3c = new A3Level1Class();//clear class
+                        a3ClassList = new List<A3Class> { a3c };
+                    a3c = new A3Class();//clear class
                     continue;
                 }
 
@@ -220,8 +220,8 @@ namespace Arma_3_Parser
                         if (a3ClassList != null && a3c.OriginalCode.Count > 0)
                             a3ClassList.Add(a3c);//store class
                         else
-                            a3ClassList = new List<A3Level2Class> { a3c };
-                        a3c = new A3Level1Class();//clear class
+                            a3ClassList = new List<A3Class> { a3c };
+                        a3c = new A3Class();//clear class
                     }
                     continue;
                 }
@@ -237,7 +237,7 @@ namespace Arma_3_Parser
                         loc += 6;//find the location where the actuall classname starts
                         int end = GenLib.endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c = new A3Level1Class(temp.Substring(loc, length));//grab the className;
+                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
                         if(cursor.Contains(":"))//does this class extend a base class
                         {
                             loc = temp.IndexOf(":");
@@ -270,7 +270,7 @@ namespace Arma_3_Parser
 
             }
             if(A3ClassList.Count > 0)
-            foreach(A3Level2Class x in A3ClassList)
+            foreach(A3Class x in A3ClassList)
             {
                 x.recursiveParseClasses();//sort all the children classes in each class, recursively
             }
@@ -280,7 +280,7 @@ namespace Arma_3_Parser
         public void stripVariables()//
         {
             if(A3ClassList.Count > 0)
-            foreach(A3Level2Class x in A3ClassList)
+            foreach(A3Class x in A3ClassList)
             {
                     x.recursiveParseVariables();
             }
@@ -289,7 +289,7 @@ namespace Arma_3_Parser
         public void buildTrees()//populate extended and nested tree's
         {
             if(A3ClassList.Count > 0)
-            foreach(A3Level2Class x in A3ClassList)//iterates through the top level classes
+            foreach(A3Class x in A3ClassList)//iterates through the top level classes
             {
                     //each of these will have the class call its own build tree file, then recursively have its own
                     //  subclasses do the same thing
@@ -300,10 +300,10 @@ namespace Arma_3_Parser
             //actualizeInheritance(A3EntireClassList); //Performance Hog - uneeded functionality now, depreciated
         }
 
-        public void actualizeInheritance(List<A3Level2Class> list)//child classes will grab inherited fields from parents
+        public void actualizeInheritance(List<A3Class> list)//child classes will grab inherited fields from parents
         {
             if(A3ClassList.Count > 0)
-                foreach(A3Level2Class x in A3ClassList)//run for each top level class
+                foreach(A3Class x in A3ClassList)//run for each top level class
                 {
                     x.actualizeInheritance(list);//have each class do its thing and recursively have its sub classes doit
                 }
@@ -313,7 +313,7 @@ namespace Arma_3_Parser
         {
             
             if(A3ClassList.Count > 0)
-                foreach(A3Level2Class x in A3ClassList)
+                foreach(A3Class x in A3ClassList)
                 {
                     if (A3EntireClassList.Count > 0)
                     {
@@ -322,7 +322,7 @@ namespace Arma_3_Parser
                     }
                     else
                     {
-                        A3EntireClassList = new List<A3Level2Class> { x };
+                        A3EntireClassList = new List<A3Class> { x };
                         A3EntireClassList = A3EntireClassList.Concat(x.grabAllClasses()).ToList();//Combine lists
                     }
                 }

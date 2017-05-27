@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Arma_3_Parser
@@ -165,7 +166,7 @@ namespace Arma_3_Parser
                             if (subClasses != null && Content.Count > 0)
                                 subClasses.Add(a3c);//store class
                             else
-                                subClasses = new List<A3Level2Class> { a3c };
+                                subClasses = new List<A3Class> { a3c };
                         }
                         a3c = new A3Level2Class();//clear class
                         continue;
@@ -226,7 +227,7 @@ namespace Arma_3_Parser
                             if (subClasses != null && Content.Count > 0)
                                 subClasses.Add(a3c);//store class
                             else
-                                subClasses = new List<A3Level2Class> { a3c };
+                                subClasses = new List<A3Class> { a3c };
                             a3c = new A3Level2Class();//clear class
                         }
                         continue;
@@ -476,7 +477,7 @@ namespace Arma_3_Parser
 
         public List<A3Class> grabAllClasses()
         {
-            List<A3Level2Class> list = new List<A3Level2Class>();
+            List<A3Class> list = new List<A3Class>();
 
             if (SubClasses.Count > 0)
                 foreach (A3Level2Class x in SubClasses)
@@ -484,7 +485,7 @@ namespace Arma_3_Parser
                     if (list.Count > 0)
                         list.Add(x);
                     else
-                        list = new List<A3Level2Class> { x };
+                        list = new List<A3Class> { x };
                     list = list.Concat(x.grabAllClasses()).ToList();//combine the list with current classes list of subclasses
                 }
 
@@ -533,7 +534,7 @@ namespace Arma_3_Parser
             get
             {
                 if (subClasses == null)
-                    return new List<A3Level2Class>();
+                    return new List<A3Class>();
                 return subClasses;
             }
             set
