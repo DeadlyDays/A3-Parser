@@ -219,7 +219,8 @@ namespace Arma_3_Parser
         {
             IFormatter form = new BinaryFormatter();
             Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            List<A3CppFile> list = (List<A3CppFile>)form.Deserialize(stream);
+            List<A3CppFile> list = new List<A3CppFile>();
+            if (stream != null) list = (List<A3CppFile>)form.Deserialize(stream);
             stream.Close();
             return list;
         }

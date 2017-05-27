@@ -393,18 +393,23 @@ namespace Arma_3_Parser
                 Log("Parsed");
                 //Build Output
                 Log("Creating File...");
-                String output = "";
-                foreach(String s in outputList)
-                {
-                    output += s;
-                }
-
-                //Create Output File
-
+                StringBuilder output = new StringBuilder(5000);
                 using (StreamWriter sw = File.CreateText(txtOutputPath.Text))
                 {
-                    sw.WriteLine(output);
+                    foreach (String s in outputList)
+                    {
+                        if (output.Capacity >= (output.MaxCapacity / 8))
+                        {
+                            sw.Write(output);
+                            output = new StringBuilder(5000);
+                        }
+                        else
+                            output.Append(s);
+                    }
+                    sw.Write(output);
                 }
+                
+                //Create Output File
                 Log("File Created At: " + txtOutputPath.Text);
                 
             }
