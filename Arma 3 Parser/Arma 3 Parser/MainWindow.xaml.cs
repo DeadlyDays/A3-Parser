@@ -293,7 +293,7 @@ namespace Arma_3_Parser
                 Log("Converting Files At: " + binPath);
                 if (!cbExtractIsNeeded.IsChecked.Value)
                     binList = GenLib.binList(binPath);
-                cppList = GenLib.convert(binList, binPath, txtCfgConvertPath.Text);
+                cppList = GenLib.convert(binList, cppPath, txtCfgConvertPath.Text);
                 Log("Converted Files To: " + cppPath);
             }
             //Serialize
