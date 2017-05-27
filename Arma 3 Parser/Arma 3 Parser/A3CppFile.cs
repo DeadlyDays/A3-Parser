@@ -15,7 +15,7 @@ namespace Arma_3_Parser
 
         private List<String> originalCodeLineList;
         //private List<String> content;//This is everything between the brackets
-        private List<A3Class> a3ClassList;
+        private List<A3Level1Class> a3ClassList;
         private List<A3Class> a3EntireClassList;
 
         public String OriginalCodeString
@@ -58,12 +58,12 @@ namespace Arma_3_Parser
                 content = value;
             }
         }*/
-        public List<A3Class> A3ClassList
+        public List<A3Level1Class> A3ClassList
         {
             get
             {
                 if (a3ClassList == null)
-                    return new List<A3Class>();
+                    return new List<A3Level1Class>();
                 return a3ClassList;
             }
             set
@@ -98,7 +98,7 @@ namespace Arma_3_Parser
                                   //until all classes have been found
         {
             //current class object
-            A3Class a3c = new A3Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for
+            A3Level1Class a3c = new A3Level1Class(); //class gets populated and then added to a3ClassList, then this class gets cleared for
                                          //new class
             int depth = 0; //this is the depth of the current line cursor, only class dec's with a depth of 0 are recorded as 
                            //a new class
@@ -135,7 +135,7 @@ namespace Arma_3_Parser
                         loc += 6;//find the location where the actuall classname starts
                         int end = GenLib.endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
+                        a3c = new A3Level1Class(temp.Substring(loc, length));//grab the className;
                         if (cursor.Contains(":"))//does this class extend a base class
                         {
                             loc = temp.IndexOf(":");
@@ -156,8 +156,8 @@ namespace Arma_3_Parser
                     if (a3ClassList != null && a3c.OriginalCode.Count > 0)
                         a3ClassList.Add(a3c);//store class
                     else
-                        a3ClassList = new List<A3Class> { a3c };
-                    a3c = new A3Class();//clear class
+                        a3ClassList = new List<A3Level1Class> { a3c };
+                    a3c = new A3Level1Class();//clear class
                     continue;
                 }
 
@@ -220,8 +220,8 @@ namespace Arma_3_Parser
                         if (a3ClassList != null && a3c.OriginalCode.Count > 0)
                             a3ClassList.Add(a3c);//store class
                         else
-                            a3ClassList = new List<A3Class> { a3c };
-                        a3c = new A3Class();//clear class
+                            a3ClassList = new List<A3Level1Class> { a3c };
+                        a3c = new A3Level1Class();//clear class
                     }
                     continue;
                 }
@@ -237,7 +237,7 @@ namespace Arma_3_Parser
                         loc += 6;//find the location where the actuall classname starts
                         int end = GenLib.endOfWord(temp, loc);//the point the classname ends
                         int length = end - loc;//the length of the classname
-                        a3c = new A3Class(temp.Substring(loc, length));//grab the className;
+                        a3c = new A3Level1Class(temp.Substring(loc, length));//grab the className;
                         if(cursor.Contains(":"))//does this class extend a base class
                         {
                             loc = temp.IndexOf(":");
