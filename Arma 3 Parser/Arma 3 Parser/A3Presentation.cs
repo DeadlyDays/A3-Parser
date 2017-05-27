@@ -458,6 +458,55 @@ namespace Arma_3_Parser
 
             return output;
         }
+
+        //Remove any not selected
+        public static List<A3Class> includeOnlySelected(List<A3Class> list, Boolean CfgVehicles, Boolean CfgAmmo,
+            Boolean CfgWeapons, Boolean CfgMagazines, Boolean Lvl1, Boolean Lvl2,
+            Boolean Tert, Boolean Other)
+        {
+            for(int i = 0; i < list.Count; i++)
+            {
+                if((list[i] is A3Level1Class) && Lvl1)
+                {
+
+                }
+                if ((list[i] is A3Level2Class) && Lvl2)
+                {
+
+                }
+                if ((list[i] is A3TertiaryClass) && Tert)
+                {
+
+                }
+                if(list[i].NestedTree[0] == "CfgVehicles" && CfgVehicles)
+                {
+
+                }
+                if(list[i].NestedTree[0] == "CfgAmmo" && CfgAmmo)
+                {
+
+                }
+                if(list[i].NestedTree[0] == "CfgMagazines" && CfgMagazines)
+                {
+
+                }
+                if(list[i].NestedTree[0] == "CfgWeapons" && CfgWeapons)
+                {
+
+                }
+                if (list[i].NestedTree[0] != "CfgVehicles" && 
+                    list[i].NestedTree[0] != "CfgAmmo" && 
+                    list[i].NestedTree[0] != "CfgMagazines" && 
+                    list[i].NestedTree[0] != "CfgWeapons" && Other)
+                {
+
+                }
+
+
+            }
+
+            return list;
+        }
         
     }
 }

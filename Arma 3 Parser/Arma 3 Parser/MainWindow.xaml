@@ -92,8 +92,16 @@
         </RichTextBox>
 
         <Button x:Name="btnProcess" Content="Process" Height="46" Margin="14,523,0,-111" Width="240" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnProcess_Click"/>
-        
-        
+        <CheckBox x:Name="cbShowCfgVehicles" Content="CfgVehicles"  Margin="746,533,0,-93" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowCfgAmmo" Content="CfgAmmo"  Margin="746,551,0,-111" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowCfgWeapons" Content="CfgWeapons"  Margin="746,569,0,-129" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowCfgMagazines" Content="CfgMagazines"  Margin="746,587,0,-147" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowLvl1" Content="Level 1 Classes"  Margin="881,533,-2,-93" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowLvl2" Content="Level 2 Classes"  Margin="881,551,-2,-111" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowTertiary" Content="Level 3 Classes"  Margin="881,568,-2,-128" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbShowOtherCfg" Content="Other Cfg"  Margin="881,586,-2,-146" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+
 
     </Grid>
 </Window>
