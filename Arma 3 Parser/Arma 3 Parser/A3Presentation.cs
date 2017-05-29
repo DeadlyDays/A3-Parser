@@ -11,7 +11,7 @@ namespace Arma_3_Parser
         //Contains filtering methods
 
         //Sort out any Classes where the name Contains part of input string
-        public static List<A3Level2Class> filterOutClassByPartialName(List<A3Level2Class> list, String[] input)
+        public static List<A3Class> filterOutClassByPartialName(List<A3Class> list, String[] input)
         {
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
@@ -28,9 +28,9 @@ namespace Arma_3_Parser
         }
 
         //Sort out any Classes where the name does not Contain part of the input string
-        public static List<A3Level2Class> filterInClassByPartialName(List<A3Level2Class> list, String[] input)
+        public static List<A3Class> filterInClassByPartialName(List<A3Class> list, String[] input)
         {
-            List<A3Level2Class> output = new List<A3Level2Class>();
+            List<A3Class> output = new List<A3Class>();
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
                 {
@@ -41,7 +41,7 @@ namespace Arma_3_Parser
                             if (output != null)
                                 output.Add(list[i]);
                             else
-                                output = new List<A3Level2Class> { list[i] };
+                                output = new List<A3Class> { list[i] };
                         }
                     }
                 }
@@ -51,9 +51,9 @@ namespace Arma_3_Parser
 
         //Sort out any Classes that do not have as their direct Parent,
         //  a Class with the name matching input string
-        public static List<A3Level2Class> filterInClassByDirectParent(List<A3Level2Class> list, String[] input)
+        public static List<A3Class> filterInClassByDirectParent(List<A3Class> list, String[] input)
         {
-            List<A3Level2Class> output = new List<A3Level2Class>();
+            List<A3Class> output = new List<A3Class>();
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
                 {
@@ -65,7 +65,7 @@ namespace Arma_3_Parser
                                 if (output != null)
                                     output.Add(list[i]);
                                 else
-                                    output = new List<A3Level2Class> { list[i] };
+                                    output = new List<A3Class> { list[i] };
                                 break;
                             }
                     }
@@ -75,9 +75,9 @@ namespace Arma_3_Parser
         }
 
         //Sort out any Classes that do not have a Parent with a name that matches input string
-        public static List<A3Level2Class> filterInClassByAnyParent(List<A3Level2Class> list, String[] input)
+        public static List<A3Class> filterInClassByAnyParent(List<A3Class> list, String[] input)
         {
-            List<A3Level2Class> output = new List<A3Level2Class>();
+            List<A3Class> output = new List<A3Class>();
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
                 {
@@ -91,7 +91,7 @@ namespace Arma_3_Parser
                                     if (output != null)
                                         output.Add(list[i]);
                                     else
-                                        output = new List<A3Level2Class> { list[i] };
+                                        output = new List<A3Class> { list[i] };
                                     goto leave;//break out of loop, we already know to include this item
                                 }
                             }
@@ -103,9 +103,9 @@ namespace Arma_3_Parser
         }
 
         //Sort out any Classes that do not have a Variable name that matches input string.
-        public static List<A3Level2Class> filterOutClassByVariableName(List<A3Level2Class> list, String[] input)
+        public static List<A3Class> filterOutClassByVariableName(List<A3Class> list, String[] input)
         {
-            List<A3Level2Class> output = new List<A3Level2Class>();
+            List<A3Class> output = new List<A3Class>();
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
                 {
@@ -119,24 +119,25 @@ namespace Arma_3_Parser
                                     if (output != null)
                                         output.Add(list[i]);
                                     else
-                                        output = new List<A3Level2Class> { list[i] };
+                                        output = new List<A3Class> { list[i] };
                                     goto leave;//break out of loop, we already know to include this item
                                 }
                             }
+
                     }
-                leave:;
+                    leave:;
                 }
             output.Reverse();
             return output;
         }
 
         //Display only these Fields
-        public static List<String> outputSelectedFields(List<A3Level2Class> list, String[] input,
+        public static List<String> outputSelectedFields(List<A3Class> list, String[] input,
             Boolean outputClassName, Boolean outputParentClass, Boolean outputBaseClass,
             Boolean outputSource)
         {
             //Create a list of only classes with selected variables
-            List<A3Level2Class> select = new List<A3Level2Class>();
+            List<A3Class> select = new List<A3Class>();
             if (list.Count > 0)
                 for (int i = (list.Count - 1); i >= 0; i--)//iterate through list
                 {
@@ -150,7 +151,7 @@ namespace Arma_3_Parser
                                     if (select != null)
                                         select.Add(list[i]);
                                     else
-                                        select = new List<A3Level2Class> { list[i] };
+                                        select = new List<A3Class> { list[i] };
                                     goto leave;//break out of loop, we already know to include this item
                                 }
                             }
@@ -204,7 +205,7 @@ namespace Arma_3_Parser
 
             //Create a list of strings with inputs as output
             if (select != null)
-                foreach (A3Level2Class c in select)//iterate through class
+                foreach (A3Class c in select)//iterate through class
                 {
                     if (outputClassName)
                     {
@@ -294,7 +295,7 @@ namespace Arma_3_Parser
         }
 
         //Display All fields
-        public static List<String> outputAllFields(List<A3Level2Class> list, Boolean outputClassName, 
+        public static List<String> outputAllFields(List<A3Class> list, Boolean outputClassName, 
             Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource)
         {
             List<String> output = new List<String>();
@@ -325,7 +326,7 @@ namespace Arma_3_Parser
             }
             List<String> variableList = new List<String>();//List of fields
             if(list != null)//Column Names to be added
-                foreach(A3Level2Class c in list)
+                foreach(A3Class c in list)
                 {
                     if(c.Variables != null)
                         foreach(A3Variable v in c.Variables)
@@ -361,7 +362,7 @@ namespace Arma_3_Parser
 
             //Create a list of strings with inputs as output
             if (list != null)
-                foreach (A3Level2Class c in list)//iterate through class
+                foreach (A3Class c in list)//iterate through class
                 {
                     if(outputClassName)
                     {
@@ -457,6 +458,68 @@ namespace Arma_3_Parser
                 }
 
             return output;
+        }
+
+        //Remove any not selected
+        public static List<A3Class> includeOnlySelected(List<A3Class> list, Boolean CfgVehicles, Boolean CfgAmmo,
+            Boolean CfgWeapons, Boolean CfgMagazines, Boolean Lvl1, Boolean Lvl2,
+            Boolean Tert, Boolean Other)
+        {
+            //we take in a list of classes, our goal is to only have the classes that are allowed at the end
+            List<A3Class> newList = new List<A3Class>();
+            for (int i = 0; i < list.Count; i++)//Iterate through every class
+            {
+                Boolean add = false;
+                if (((list[i] is A3Level1Class) && Lvl1))//When Lvl 1 toggled on, if it isn't a lvl1, remove it)
+                {
+                    add = true;
+                }
+                if (((list[i] is A3Level2Class) && Lvl2))
+                {
+                    add = true;
+                }
+                if (((list[i] is A3TertiaryClass) && Tert))
+                {
+                    add = true;
+                }
+                if (add) newList.Add(list[i]);
+            }
+            List<A3Class> finalList = new List<A3Class>();
+            for (int i = 0; i < newList.Count; i++)//Iterate through every class
+            {
+                Boolean add = false;
+                if(newList[i].NestedTree.Count >= 1)
+                { 
+                if ((newList[i].NestedTree[0] == "CfgVehicles" && CfgVehicles))
+                {
+                    add = true;
+                }
+                if ((newList[i].NestedTree[0] == "CfgAmmo" && CfgAmmo))
+                {
+                    add = true;
+                }
+                if ((newList[i].NestedTree[0] == "CfgMagazines" && CfgMagazines))
+                {
+                    add = true;
+                }
+                if ((newList[i].NestedTree[0] == "CfgWeapons" && CfgWeapons))
+                {
+                    add = true;
+                }
+                if ((newList[i].NestedTree[0] != "CfgVehicles" &&
+                    newList[i].NestedTree[0] != "CfgAmmo" &&
+                    newList[i].NestedTree[0] != "CfgMagazines" &&
+                    newList[i].NestedTree[0] != "CfgWeapons" && Other))
+                {
+                    add = true;
+                }
+                }
+                if (add) finalList.Add(newList[i]);
+
+
+            }
+
+            return finalList;
         }
         
     }

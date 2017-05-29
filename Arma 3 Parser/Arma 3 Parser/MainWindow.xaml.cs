@@ -293,7 +293,7 @@ namespace Arma_3_Parser
                 Log("Converting Files At: " + binPath);
                 if (!cbExtractIsNeeded.IsChecked.Value)
                     binList = GenLib.binList(binPath);
-                cppList = GenLib.convert(binList, binPath, txtCfgConvertPath.Text);
+                cppList = GenLib.convert(binList, cppPath, txtCfgConvertPath.Text);
                 Log("Converted Files To: " + cppPath);
             }
             //Serialize
@@ -356,22 +356,24 @@ namespace Arma_3_Parser
                 Log("Deserialized");
                 Log("Parsing...");
                 //create list of all classes
-                List<A3Level2Class> list = new List<A3Level2Class>();
-
-                if(flist != null)
+                List<A3Class> list = new List<A3Class>();
+                
+                if (flist != null)
                     for(int i = 0; i < flist.Count; i++)
                     {
                         if(flist[i] != null)
                             if(flist[i].A3EntireClassList != null)
-                                foreach(A3Level2Class c in flist[i].A3EntireClassList)
+                                foreach(A3Class c in flist[i].A3EntireClassList)
                                 {
                                     if (list != null)
                                         list.Add(c);
                                     else
-                                        list = new List<A3Level2Class> { c };
+                                        list = new List<A3Class> { c };
                                 }
                     }
-                
+
+                list = A3Presentation.includeOnlySelected(list, cbShowCfgVehicles.IsChecked.Value, cbShowCfgAmmo.IsChecked.Value, cbShowCfgWeapons.IsChecked.Value, cbShowCfgMagazines.IsChecked.Value, cbShowLvl1.IsChecked.Value, cbShowLvl2.IsChecked.Value, cbShowTertiary.IsChecked.Value, cbShowOtherCfg.IsChecked.Value);
+
                 //Apply Filters
                 List<String> outputList = new List<String>();
                 if(txtNotContainPartClass.Text != "")
@@ -390,21 +392,27 @@ namespace Arma_3_Parser
                 if (cbDisplayAllFields.IsChecked.Value)
                     outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
                     cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
+                
                 Log("Parsed");
                 //Build Output
                 Log("Creating File...");
-                String output = "";
-                foreach(String s in outputList)
-                {
-                    output += s;
-                }
-
-                //Create Output File
-
+                StringBuilder output = new StringBuilder(5000);
                 using (StreamWriter sw = File.CreateText(txtOutputPath.Text))
                 {
-                    sw.WriteLine(output);
+                    foreach (String s in outputList)
+                    {
+                        if (output.Capacity >= (output.MaxCapacity / 8))
+                        {
+                            sw.Write(output);
+                            output = new StringBuilder(5000);
+                        }
+                        else
+                            output.Append(s);
+                    }
+                    sw.Write(output);
                 }
+                
+                //Create Output File
                 Log("File Created At: " + txtOutputPath.Text);
                 
             }
