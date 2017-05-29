@@ -210,6 +210,67 @@ namespace Arma_3_Parser
                 }
         }
 
+        public new void recursiveParseVariables()
+        {
+            filterContentNoClasses();
+            if (ContentNoClasses != null)
+                for (int i = 0; i < ContentNoClasses.Count; i++)
+                {
+
+                    String cursor = ContentNoClasses[i];
+                    cursor = cursor.Replace("\n", "").Replace("\r", "").Replace(" ", "").Replace("\t", "");
+                    if (cursor == "")
+                        continue;
+                    if (cursor.Contains("[]"))//array
+                    {
+                        A3Variable var = new A3Variable();
+                        //Begin Array processes, doesn't end until we hit a ;
+                        //multiple decs in a single line will need to be special later;
+                        for (int e = i; e < ContentNoClasses.Count; e++)
+                        {
+                            if (cursor.Contains(";"))
+                            {
+                                if (var.OriginalCode.Count > 0)
+                                    var.OriginalCode.Add(cursor);
+                                else
+                                    var.OriginalCode = new List<String> { cursor };
+                                i = e;
+                                break;
+                            }
+                            else
+                            {
+                                if (var.OriginalCode.Count > 0)
+                                    var.OriginalCode.Add(cursor);
+                                else
+                                    var.OriginalCode = new List<String> { cursor };
+                            }
+                        }
+                        if (Variables.Count > 0)
+                            Variables.Add(var);
+                        else
+                            Variables = new List<A3Variable> { var };
+                    }
+                    else if (cursor.Contains("="))//variable
+                    {
+                        if (Variables.Count > 0)
+                            Variables.Add(new A3Variable(cursor));
+                        else
+                            Variables = new List<A3Variable> { new A3Variable(cursor) };
+                    }
+                    if (Variables.Count > 0)
+                        Variables[Variables.Count - 1].processCode();//process the last variable added
+                }
+            if (SubClasses.Count > 0)
+                foreach (A3TertiaryClass x in SubClasses)
+                {
+                    x.recursiveParseVariables();
+                }
+            foreach (A3Variable x in Variables)
+            {
+                x.processCode();
+            }
+        }
+
         public new void buildNestedTree()
         {
             if (SubClasses.Count > 0)

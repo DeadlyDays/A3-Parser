@@ -123,8 +123,9 @@ namespace Arma_3_Parser
                                     goto leave;//break out of loop, we already know to include this item
                                 }
                             }
+
                     }
-                leave:;
+                    leave:;
                 }
             output.Reverse();
             return output;
