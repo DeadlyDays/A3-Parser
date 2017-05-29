@@ -357,8 +357,8 @@ namespace Arma_3_Parser
                 Log("Parsing...");
                 //create list of all classes
                 List<A3Class> list = new List<A3Class>();
-
-                if(flist != null)
+                
+                if (flist != null)
                     for(int i = 0; i < flist.Count; i++)
                     {
                         if(flist[i] != null)
@@ -371,7 +371,9 @@ namespace Arma_3_Parser
                                         list = new List<A3Class> { c };
                                 }
                     }
-                
+
+                list = A3Presentation.includeOnlySelected(list, cbShowCfgVehicles.IsChecked.Value, cbShowCfgAmmo.IsChecked.Value, cbShowCfgWeapons.IsChecked.Value, cbShowCfgMagazines.IsChecked.Value, cbShowLvl1.IsChecked.Value, cbShowLvl2.IsChecked.Value, cbShowTertiary.IsChecked.Value, cbShowOtherCfg.IsChecked.Value);
+
                 //Apply Filters
                 List<String> outputList = new List<String>();
                 if(txtNotContainPartClass.Text != "")
@@ -390,6 +392,7 @@ namespace Arma_3_Parser
                 if (cbDisplayAllFields.IsChecked.Value)
                     outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
                     cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
+                
                 Log("Parsed");
                 //Build Output
                 Log("Creating File...");

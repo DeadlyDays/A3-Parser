@@ -270,7 +270,7 @@ namespace Arma_3_Parser
 
             }
             if(A3ClassList.Count > 0)
-            foreach(A3Class x in A3ClassList)
+            foreach(A3Level1Class x in A3ClassList)
             {
                 x.recursiveParseClasses();//sort all the children classes in each class, recursively
             }
@@ -289,7 +289,7 @@ namespace Arma_3_Parser
         public void buildTrees()//populate extended and nested tree's
         {
             if(A3ClassList.Count > 0)
-            foreach(A3Class x in A3ClassList)//iterates through the top level classes
+            foreach(A3Level1Class x in A3ClassList)//iterates through the top level classes
             {
                     //each of these will have the class call its own build tree file, then recursively have its own
                     //  subclasses do the same thing
@@ -313,7 +313,7 @@ namespace Arma_3_Parser
         {
             
             if(A3ClassList.Count > 0)
-                foreach(A3Class x in A3ClassList)
+                foreach(A3Level1Class x in A3ClassList)
                 {
                     if (A3EntireClassList.Count > 0)
                     {

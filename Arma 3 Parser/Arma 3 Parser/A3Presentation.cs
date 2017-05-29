@@ -464,48 +464,61 @@ namespace Arma_3_Parser
             Boolean CfgWeapons, Boolean CfgMagazines, Boolean Lvl1, Boolean Lvl2,
             Boolean Tert, Boolean Other)
         {
-            for(int i = 0; i < list.Count; i++)
+            //we take in a list of classes, our goal is to only have the classes that are allowed at the end
+            List<A3Class> newList = new List<A3Class>();
+            for (int i = 0; i < list.Count; i++)//Iterate through every class
             {
-                if((list[i] is A3Level1Class) && Lvl1)
+                Boolean add = false;
+                if (((list[i] is A3Level1Class) && Lvl1))//When Lvl 1 toggled on, if it isn't a lvl1, remove it)
                 {
-
+                    add = true;
                 }
-                if ((list[i] is A3Level2Class) && Lvl2)
+                if (((list[i] is A3Level2Class) && Lvl2))
                 {
-
+                    add = true;
                 }
-                if ((list[i] is A3TertiaryClass) && Tert)
+                if (((list[i] is A3TertiaryClass) && Tert))
                 {
-
+                    add = true;
                 }
-                if(list[i].NestedTree[0] == "CfgVehicles" && CfgVehicles)
+                if (add) newList.Add(list[i]);
+            }
+            List<A3Class> finalList = new List<A3Class>();
+            for (int i = 0; i < newList.Count; i++)//Iterate through every class
+            {
+                Boolean add = false;
+                if(newList[i].NestedTree.Count >= 1)
+                { 
+                if ((newList[i].NestedTree[0] == "CfgVehicles" && CfgVehicles))
                 {
-
+                    add = true;
                 }
-                if(list[i].NestedTree[0] == "CfgAmmo" && CfgAmmo)
+                if ((newList[i].NestedTree[0] == "CfgAmmo" && CfgAmmo))
                 {
-
+                    add = true;
                 }
-                if(list[i].NestedTree[0] == "CfgMagazines" && CfgMagazines)
+                if ((newList[i].NestedTree[0] == "CfgMagazines" && CfgMagazines))
                 {
-
+                    add = true;
                 }
-                if(list[i].NestedTree[0] == "CfgWeapons" && CfgWeapons)
+                if ((newList[i].NestedTree[0] == "CfgWeapons" && CfgWeapons))
                 {
-
+                    add = true;
                 }
-                if (list[i].NestedTree[0] != "CfgVehicles" && 
-                    list[i].NestedTree[0] != "CfgAmmo" && 
-                    list[i].NestedTree[0] != "CfgMagazines" && 
-                    list[i].NestedTree[0] != "CfgWeapons" && Other)
+                if ((newList[i].NestedTree[0] != "CfgVehicles" &&
+                    newList[i].NestedTree[0] != "CfgAmmo" &&
+                    newList[i].NestedTree[0] != "CfgMagazines" &&
+                    newList[i].NestedTree[0] != "CfgWeapons" && Other))
                 {
-
+                    add = true;
                 }
+                }
+                if (add) finalList.Add(newList[i]);
 
 
             }
 
-            return list;
+            return finalList;
         }
         
     }

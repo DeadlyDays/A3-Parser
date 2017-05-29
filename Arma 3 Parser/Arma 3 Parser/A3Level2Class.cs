@@ -21,7 +21,21 @@ namespace Arma_3_Parser
             fileLocation = "";
         }
 
-        public void recursiveParseClasses()//parses all the children classes in originalcode and tells each child to do the same
+        public new List<A3TertiaryClass> SubClasses
+        {
+            get
+            {
+                if (subClasses == null)
+                    return new List<A3TertiaryClass>();
+                return subClasses;
+            }
+            set
+            {
+                subClasses = value;
+            }
+        }
+
+        public new void recursiveParseClasses()//parses all the children classes in originalcode and tells each child to do the same
         {//strips only the top level and records contents
             filterContent();
             //current class object
@@ -190,10 +204,97 @@ namespace Arma_3_Parser
 
                 }
             if (subClasses != null)
-                foreach (A3Class x in subClasses)
+                foreach (A3TertiaryClass x in subClasses)
                 {
                     x.recursiveParseClasses();//sort all the children classes in each class, recursively
                 }
+        }
+
+        public void buildNestedTree()
+        {
+            if (SubClasses.Count > 0)
+            {
+                foreach (A3Class x in SubClasses)
+                {
+                    if (x.NestedTree.Count > 0)
+                        x.NestedTree.Add(A3ClassName);
+                    else
+                        x.NestedTree = new List<String> { A3ClassName };
+                }
+
+                foreach (A3Class x in SubClasses)
+                {
+                    x.buildNestedTree();
+                }
+            }
+        }
+
+        public void buildExtendedTree(List<A3Class> list)
+        {
+            Boolean workLeft = true;
+            int place = 0;
+            if (ExtendedTree.Count > 0)//only if there is a base class
+                while (workLeft)
+                {
+                    String cursor = "";
+                    if (ExtendedTree.Count > place)
+                        cursor = ExtendedTree[place];
+                    else//break out of the loop if we are no longer looking at anything
+                        break;
+
+                    for (int i = 0; i < list.Count; i++)//Find the base class
+                    {
+                        if (list[i].A3ClassName == cursor)//if base class name matches current looked at class in list
+                        {
+                            if (list[i].ExtendedTree.Count > 0)//if the looked at class has a base class
+                            {
+                                ExtendedTree.Add(list[i].ExtendedTree[0]);//add the looked at classes base class to current class
+                                place++;//look at the next parent
+                                break;
+                            }
+                        }
+                    }
+                    place++;//look at the next parent
+                }
+            if (SubClasses.Count > 0)
+                foreach (A3Class x in SubClasses)
+                {
+                    x.buildExtendedTree(list);
+                }
+        }
+
+        public void buildInheritanceTree()
+        {
+            if (NestedTree.Count > 0 && ExtendedTree.Count > 0)
+                InheritanceTree = ExtendedTree.Concat(NestedTree).ToList();
+            else if (NestedTree.Count > 0)
+                InheritanceTree = NestedTree;
+            else if (ExtendedTree.Count > 0)
+                InheritanceTree = ExtendedTree;
+            else
+                ;
+            if (SubClasses.Count > 0)
+                foreach (A3Class x in SubClasses)
+                {
+                    x.buildInheritanceTree();
+                }
+        }
+
+        public new List<A3Class> grabAllClasses()
+        {
+            List<A3Class> list = new List<A3Class>();
+
+            if (SubClasses.Count > 0)
+                foreach (A3TertiaryClass x in SubClasses)
+                {
+                    if (list.Count > 0)
+                        list.Add(x);
+                    else
+                        list = new List<A3Class> { x };
+                    list = list.Concat(x.grabAllClasses()).ToList();//combine the list with current classes list of subclasses
+                }
+
+            return list;
         }
 
     }
