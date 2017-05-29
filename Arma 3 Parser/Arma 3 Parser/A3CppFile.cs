@@ -280,7 +280,7 @@ namespace Arma_3_Parser
         public void stripVariables()//
         {
             if(A3ClassList.Count > 0)
-            foreach(A3Class x in A3ClassList)
+            foreach(A3Level1Class x in A3ClassList)
             {
                     x.recursiveParseVariables();
             }
