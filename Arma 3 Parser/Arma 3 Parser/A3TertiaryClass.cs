@@ -210,11 +210,11 @@ namespace Arma_3_Parser
                 }
         }
 
-        public void buildNestedTree()
+        public new void buildNestedTree()
         {
             if (SubClasses.Count > 0)
             {
-                foreach (A3Class x in SubClasses)
+                foreach (A3TertiaryClass x in SubClasses)
                 {
                     if (x.NestedTree.Count > 0)
                         x.NestedTree.Add(A3ClassName);
@@ -222,14 +222,14 @@ namespace Arma_3_Parser
                         x.NestedTree = new List<String> { A3ClassName };
                 }
 
-                foreach (A3Class x in SubClasses)
+                foreach (A3TertiaryClass x in SubClasses)
                 {
                     x.buildNestedTree();
                 }
             }
         }
 
-        public void buildExtendedTree(List<A3Class> list)
+        public new void buildExtendedTree(List<A3Class> list)
         {
             Boolean workLeft = true;
             int place = 0;
@@ -257,13 +257,13 @@ namespace Arma_3_Parser
                     place++;//look at the next parent
                 }
             if (SubClasses.Count > 0)
-                foreach (A3Class x in SubClasses)
+                foreach (A3TertiaryClass x in SubClasses)
                 {
                     x.buildExtendedTree(list);
                 }
         }
 
-        public void buildInheritanceTree()
+        public new void buildInheritanceTree()
         {
             if (NestedTree.Count > 0 && ExtendedTree.Count > 0)
                 InheritanceTree = ExtendedTree.Concat(NestedTree).ToList();
@@ -274,7 +274,7 @@ namespace Arma_3_Parser
             else
                 ;
             if (SubClasses.Count > 0)
-                foreach (A3Class x in SubClasses)
+                foreach (A3TertiaryClass x in SubClasses)
                 {
                     x.buildInheritanceTree();
                 }
