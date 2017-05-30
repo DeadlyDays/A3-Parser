@@ -514,6 +514,33 @@ namespace Arma_3_Parser
                     add = true;
                 }
                 }
+                else
+                {
+                    if ((newList[i].A3ClassName == "CfgVehicles" && CfgVehicles))
+                    {
+                        add = true;
+                    }
+                    if ((newList[i].A3ClassName == "CfgAmmo" && CfgAmmo))
+                    {
+                        add = true;
+                    }
+                    if ((newList[i].A3ClassName == "CfgMagazines" && CfgMagazines))
+                    {
+                        add = true;
+                    }
+                    if ((newList[i].A3ClassName == "CfgWeapons" && CfgWeapons))
+                    {
+                        add = true;
+                    }
+                    if ((newList[i].A3ClassName != "CfgVehicles" &&
+                        newList[i].A3ClassName != "CfgAmmo" &&
+                        newList[i].A3ClassName != "CfgMagazines" &&
+                        newList[i].A3ClassName != "CfgWeapons" && Other))
+                    {
+                        add = true;
+                    }
+
+                }
                 if (add) finalList.Add(newList[i]);
 
 
