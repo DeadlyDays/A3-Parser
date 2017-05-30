@@ -323,7 +323,7 @@ namespace Arma_3_Parser
                 Parallel.For(0,
                     (cppList.Count - 1),/* new ParallelOptions
                     {
-                        MaxDegreeOfParallelism = 8
+                        MaxDegreeOfParallelism = 1
                     },*/
                     a =>
                 {
