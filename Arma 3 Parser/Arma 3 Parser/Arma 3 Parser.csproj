@@ -32,7 +32,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <WebPage>A3Parser</WebPage>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

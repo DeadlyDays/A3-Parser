@@ -134,7 +134,7 @@ namespace Arma_3_Parser
         //Display only these Fields
         public static List<String> outputSelectedFields(List<A3Class> list, String[] input,
             Boolean outputClassName, Boolean outputParentClass, Boolean outputBaseClass,
-            Boolean outputSource)
+            Boolean outputSource, List<String> a, List<String> b)
         {
             //Create a list of only classes with selected variables
             List<A3Class> select = new List<A3Class>();
@@ -161,6 +161,7 @@ namespace Arma_3_Parser
             select.Reverse();
             List<String> output = new List<String>();
             String cursor = "";
+            //Headers
             if (outputClassName || outputParentClass || outputBaseClass)
             {
                 if (outputClassName)
@@ -184,6 +185,13 @@ namespace Arma_3_Parser
                     else
                         cursor += "BaseClass";
                 }
+            }
+            for (int i = 0; i < a.Count; i++)//Add header for 'additional' columns
+            {
+                if (cursor != "")
+                    cursor += "," + a[i];
+                else
+                    cursor += a[i];
             }
             foreach(String s in input)
             {
@@ -238,7 +246,13 @@ namespace Arma_3_Parser
                         else
                             cursor += ",";
                     }
-                    
+                    for(int z = 0; z < b.Count; z++)
+                    {
+                        if (cursor != "")
+                            cursor += "," + b[z];
+                        else
+                            cursor += b[z];
+                    }
                     if(input != null)
                         foreach (String s in input)//iterate through classes variables
                         {
@@ -296,7 +310,7 @@ namespace Arma_3_Parser
 
         //Display All fields
         public static List<String> outputAllFields(List<A3Class> list, Boolean outputClassName, 
-            Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource)
+            Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource, List<String> a, List<String> b)
         {
             List<String> output = new List<String>();
             String cursor = "";//Current string to be added
@@ -323,6 +337,13 @@ namespace Arma_3_Parser
                     else
                         cursor += "BaseClass";
                 }
+            }
+            for (int z = 0; z < a.Count; z++)
+            {
+                if (cursor != "")
+                    cursor += "," + a[z];
+                else
+                    cursor += a[z];
             }
             List<String> variableList = new List<String>();//List of fields
             if(list != null)//Column Names to be added
@@ -394,6 +415,13 @@ namespace Arma_3_Parser
                         }
                         else
                             cursor += ",";
+                    }
+                    for (int z = 0; z < b.Count; z++)
+                    {
+                        if (cursor != "")
+                            cursor += "," + b[z];
+                        else
+                            cursor += b[z];
                     }
                     //cursor = "";//idk why this was here....left over?
                     if (c.Variables != null)

@@ -297,7 +297,20 @@ namespace Arma_3_Parser
             String cppPath = txtCppPath.Text;
             String serialPath = txtSerialized.Text;
             String outputPath = txtOutputPath.Text;
-
+            List<String> addColumn = new List<String>();
+            List<String> addToAllRows = new List<String>();
+            List<String> temp = tbExtraColumns.Text.Split(';').ToList();
+            if(tbExtraColumns.Text != String.Empty)
+            foreach (String x in temp)
+            {
+                addColumn.Add(x.Split(':')[0]);
+                addToAllRows.Add(x.Split(':')[1]);
+            }
+            if(addColumn.Count != addToAllRows.Count)
+            {
+                addColumn = null;
+                addToAllRows = null;
+            }
             //Extract
             List<String> binList = new List<String>();
             if (cbExtractIsNeeded.IsChecked.Value)
@@ -408,10 +421,10 @@ namespace Arma_3_Parser
                     list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
                 if (txtDisplayFields.Text != "")
                     outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows);
                 if (cbDisplayAllFields.IsChecked.Value)
                     outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value);
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows);
                 
                 Log("Parsed");
                 //Build Output
