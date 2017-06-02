@@ -134,7 +134,7 @@ namespace Arma_3_Parser
         //Display only these Fields
         public static List<String> outputSelectedFields(List<A3Class> list, String[] input,
             Boolean outputClassName, Boolean outputParentClass, Boolean outputBaseClass,
-            Boolean outputSource, List<String> a, List<String> b)
+            Boolean outputSource, List<String> a, List<String> b, Boolean cfgType)
         {
             //Create a list of only classes with selected variables
             List<A3Class> select = new List<A3Class>();
@@ -185,7 +185,15 @@ namespace Arma_3_Parser
                     else
                         cursor += "BaseClass";
                 }
+                if (cfgType)
+                {
+                    if (cursor != "")
+                        cursor += "," + "Config Type";
+                    else
+                        cursor += "Config Type";
+                }
             }
+
             for (int i = 0; i < a.Count; i++)//Add header for 'additional' columns
             {
                 if (cursor != "")
@@ -242,6 +250,18 @@ namespace Arma_3_Parser
                                 cursor += "," + c.ExtendedTree[0];
                             else
                                 cursor += c.ExtendedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    if (cfgType)
+                    {
+                        if (c.InheritanceTree[0] != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.InheritanceTree[0];
+                            else
+                                cursor += c.InheritanceTree[0];
                         }
                         else
                             cursor += ",";
@@ -310,7 +330,7 @@ namespace Arma_3_Parser
 
         //Display All fields
         public static List<String> outputAllFields(List<A3Class> list, Boolean outputClassName, 
-            Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource, List<String> a, List<String> b)
+            Boolean outputParentClass, Boolean outputBaseClass, Boolean outputSource, List<String> a, List<String> b, Boolean cfgType)
         {
             List<String> output = new List<String>();
             String cursor = "";//Current string to be added
@@ -336,6 +356,13 @@ namespace Arma_3_Parser
                         cursor += "," + "BaseClass";
                     else
                         cursor += "BaseClass";
+                }
+                if (cfgType)
+                {
+                    if (cursor != "")
+                        cursor += "," + "Config Type";
+                    else
+                        cursor += "Config Type";
                 }
             }
             for (int z = 0; z < a.Count; z++)
@@ -412,6 +439,18 @@ namespace Arma_3_Parser
                                 cursor += "," + c.ExtendedTree[0];
                             else
                                 cursor += c.ExtendedTree[0];
+                        }
+                        else
+                            cursor += ",";
+                    }
+                    if (cfgType)
+                    {
+                        if (c.InheritanceTree[0] != null)
+                        {
+                            if (cursor != "")
+                                cursor += "," + c.InheritanceTree[0];
+                            else
+                                cursor += c.InheritanceTree[0];
                         }
                         else
                             cursor += ",";

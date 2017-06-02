@@ -102,6 +102,7 @@
         <CheckBox x:Name="cbShowOtherCfg" Content="Other Cfg"  Margin="699,586,0,-146" Height="18" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="tbExtraColumns" HorizontalAlignment="Left" Height="82" Margin="690,439,0,-63" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164"/>
         <Label x:Name="label" Content="Add Column:Value" HorizontalAlignment="Left" Margin="686,418,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbConfigType" Content="Show Config Type?"  Margin="417,580,0,-140" Height="18" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
 
 

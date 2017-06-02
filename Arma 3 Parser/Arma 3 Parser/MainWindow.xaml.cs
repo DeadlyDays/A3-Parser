@@ -421,10 +421,12 @@ namespace Arma_3_Parser
                     list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
                 if (txtDisplayFields.Text != "")
                     outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows);
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows,
+                    cbConfigType.IsChecked.Value);
                 if (cbDisplayAllFields.IsChecked.Value)
                     outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows);
+                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows,
+                    cbConfigType.IsChecked.Value);
                 
                 Log("Parsed");
                 //Build Output
