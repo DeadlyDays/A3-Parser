@@ -67,15 +67,18 @@ namespace Arma_3_Parser
             for (int i = 0; i < PBOFilePathList.Count; i++)//iterate through all the PBO's and run bankrev on each
             {
                 ProcessStartInfo alpha = new ProcessStartInfo();
+                
                 alpha.FileName = BankRev;
                 //Launch process in background
                 alpha.CreateNoWindow = true;
                 alpha.WindowStyle = ProcessWindowStyle.Hidden;
                 alpha.Arguments = "-f " + toPath + " \"" + PBOFilePathList[i] + "\"";
-                Process.Start(alpha);
+                Process trackit = Process.Start(alpha);
+                trackit.WaitForExit();
                
             }
             //potentially a bug where not all are being extracted, need to verify and rerun on missing if so.
+            /* Too Bruteforce, silly
             List<String> todo = PBOFilePathList;
             while (System.IO.Directory.GetDirectories(toPath).ToList().Count != PBOFilePathList.Count)
             {
@@ -103,7 +106,10 @@ namespace Arma_3_Parser
                     alpha.Arguments = "-f " + toPath + " \"" + todo[i] + "\"";
                     Process.Start(alpha);
                 }
-            }
+            }*/
+
+
+
             return binList(toPath);
         }
 
@@ -124,9 +130,11 @@ namespace Arma_3_Parser
                 alpha.CreateNoWindow = true;
                 alpha.WindowStyle = ProcessWindowStyle.Hidden;
                 alpha.Arguments = "-txt -dst " + toPath + " " + fromList[i];
-                Process.Start(alpha);
+                Process trackit = Process.Start(alpha);
+                trackit.WaitForExit();
             }
             //there is a bug where not all are converting, we need to verify and rerun on missing until all done
+            /* Too Bruteforce, silly
             List<String> todo = fromList;
             List<String> check = System.IO.Directory.GetFiles(toThisPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
             while (check.Count != todo.Count)
@@ -161,7 +169,7 @@ namespace Arma_3_Parser
                 }
                 check = System.IO.Directory.GetFiles(toThisPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
             }
-            List<String> checkList = System.IO.Directory.GetFiles(toThisPath, "config.bin", System.IO.SearchOption.AllDirectories).ToList();
+            List<String> checkList = System.IO.Directory.GetFiles(toThisPath, "config.bin", System.IO.SearchOption.AllDirectories).ToList();*/
             return cppList(toThisPath);
         }//convert from a list of .bin's to a location as .cpp's
 
@@ -211,6 +219,11 @@ namespace Arma_3_Parser
         {
             IFormatter form = new BinaryFormatter();
             Stream stream = new FileStream(toFile, FileMode.Create, FileAccess.Write, FileShare.None);
+            /*foreach(A3CppFile x in fileList)
+            {
+                if(x != null)
+                    form.Serialize(stream, x);
+            }*/
             form.Serialize(stream, fileList);
             stream.Close();
         }
