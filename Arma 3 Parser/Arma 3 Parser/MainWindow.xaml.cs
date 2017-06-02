@@ -133,6 +133,16 @@ namespace Arma_3_Parser
 
         private void btnBrowseSerialized_Click(object sender, RoutedEventArgs e)
         {
+            System.Windows.Forms.FolderBrowserDialog dlg = browseForDirectory(txtCppPath.Text);
+
+            // Open Dialog and verify it opens via opening via Showdialog and checking DialogResult Get the selected file name and display in a TextBox
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Open document
+                string filename = dlg.SelectedPath;
+                txtSerialized.Text = filename;
+            }
+            /*
             Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtSerialized.Text, "txt");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();
@@ -142,11 +152,21 @@ namespace Arma_3_Parser
                 // Open document
                 string filename = dlg.FileName;
                 txtSerialized.Text = filename;
-            }
+            }*/
         }
 
         private void btnBrowseOutput_Click(object sender, RoutedEventArgs e)
         {
+            /*System.Windows.Forms.FolderBrowserDialog dlg = browseForDirectory(txtCppPath.Text);
+
+            // Open Dialog and verify it opens via opening via Showdialog and checking DialogResult Get the selected file name and display in a TextBox
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Open document
+                string filename = dlg.SelectedPath;
+                txtOutputPath.Text = filename;
+            }*/
+            
             Microsoft.Win32.OpenFileDialog dlg = browseForFile(txtOutputPath.Text, "txt");
             // Display OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = dlg.ShowDialog();

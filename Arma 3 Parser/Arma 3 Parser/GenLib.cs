@@ -215,26 +215,52 @@ namespace Arma_3_Parser
             return file;
         }
         */
-        public static void serialize(List<A3CppFile> fileList, String toFile)
+        public static void serialize(List<A3CppFile> fileList, String path)
         {
-            IFormatter form = new BinaryFormatter();
-            Stream stream = new FileStream(toFile, FileMode.Create, FileAccess.Write, FileShare.None);
-            /*foreach(A3CppFile x in fileList)
+            List<String> pathList = new List<String>();
+            if (System.IO.Directory.Exists(path))
             {
-                if(x != null)
-                    form.Serialize(stream, x);
-            }*/
-            form.Serialize(stream, fileList);
-            stream.Close();
+                pathList = System.IO.Directory.GetFiles(path, "*.dat", System.IO.SearchOption.AllDirectories).ToList();
+            }
+            else
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            if (pathList.Count > 0)
+            foreach(String x in pathList)//remove all these Serial*.dat's if they exist
+            {
+                System.IO.File.Delete(x);
+            }
+            for(int i = 0; i < fileList.Count; i++)//create a seperate .dat file for each cpp
+            {
+                if (fileList[i] == null)
+                    continue;
+                String fileName = path + "\\serial" + i + ".dat";
+                IFormatter form = new BinaryFormatter();
+                Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                form.Serialize(stream, fileList[i]);
+                stream.Close();
+            }
+            
         }
 
         public static List<A3CppFile> deserialize(String filePath)
         {
-            IFormatter form = new BinaryFormatter();
-            Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            List<String> pathList = new List<String>();
+            if (System.IO.Directory.Exists(filePath))
+            {
+                pathList = System.IO.Directory.GetFiles(filePath, "*.dat", System.IO.SearchOption.AllDirectories).ToList();
+            }
+            else;
             List<A3CppFile> list = new List<A3CppFile>();
-            if (stream != null) list = (List<A3CppFile>)form.Deserialize(stream);
-            stream.Close();
+            for(int i = 0; i < pathList.Count; i++)
+            {
+                IFormatter form = new BinaryFormatter();
+                Stream stream = new FileStream(pathList[i], FileMode.Open, FileAccess.Read, FileShare.Read);
+
+                if (stream != null) list.Add((A3CppFile)form.Deserialize(stream));
+                stream.Close();
+            }
             return list;
         }
 
