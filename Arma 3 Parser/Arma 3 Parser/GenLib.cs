@@ -7,11 +7,33 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 namespace Arma_3_Parser
 {
     static class GenLib//General Library of Methods
     {
+
+        public static MySqlConnection openDB(String serverAddr, String UID, String Password, String DB)
+        {
+            MySqlConnection db = new MySqlConnection();
+            try { 
+            db = new MySqlConnection("Server=" + serverAddr + ";Uid=" + UID + ";Pwd=" + Password + ";Database=" + DB);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                MessageBox.Show("DB Connection Error");
+                db.Close();
+                return new MySqlConnection();
+            }
+            return db;
+        }
+        public static void closeDB(MySqlConnection db)
+        {
+            db.Close();
+        }
+
         public static List<String> binList(String path)//create a list of bin files
         {
             path = path.Replace("config.bin", "");

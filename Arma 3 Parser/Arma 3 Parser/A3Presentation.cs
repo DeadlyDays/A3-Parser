@@ -188,9 +188,9 @@ namespace Arma_3_Parser
                 if (cfgType)
                 {
                     if (cursor != "")
-                        cursor += "," + "Config Type";
+                        cursor += "," + "configType";
                     else
-                        cursor += "Config Type";
+                        cursor += "configType";
                 }
             }
 
@@ -360,9 +360,9 @@ namespace Arma_3_Parser
                 if (cfgType)
                 {
                     if (cursor != "")
-                        cursor += "," + "Config Type";
+                        cursor += "," + "configType";
                     else
-                        cursor += "Config Type";
+                        cursor += "configType";
                 }
             }
             for (int z = 0; z < a.Count; z++)
