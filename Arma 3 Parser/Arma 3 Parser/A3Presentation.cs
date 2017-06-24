@@ -476,22 +476,30 @@ namespace Arma_3_Parser
                                     //add variable
                                     if (cursor != "")
                                     {
-                                        if (v.Value[0].Contains("\""))
+                                        cursor += ",";
+                                        for(int l = 0; l < v.Value.Count; l++)
                                         {
-                                            cursor += "," + v.Value[0];
+                                            if (v.Value[l].Contains("\""))
+                                            {
+                                                cursor += v.Value[l];
+                                            }
+                                            else
+                                                cursor += v.Value[l] + "\"";
                                         }
-                                        else
-                                            cursor += ",\"" + v.Value[0] + "\"";
+                                        
                                     }
                                         
                                     else
                                     {
-                                        if (v.Value[0].Contains("\""))
+                                        for(int l = 0; l < v.Value.Count; l++)
                                         {
-                                            cursor += v.Value[0];
+                                            if (v.Value[l].Contains("\""))
+                                            {
+                                                cursor += v.Value[l];
+                                            }
+                                            else
+                                                cursor += v.Value[l] + "\"";
                                         }
-                                        else
-                                            cursor += "\"" + v.Value[0] + "\"";
                                     }
                                     
                                     check = true;

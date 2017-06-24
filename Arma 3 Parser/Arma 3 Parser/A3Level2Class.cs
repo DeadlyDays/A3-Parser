@@ -216,40 +216,61 @@ namespace Arma_3_Parser
             if (ContentNoClasses != null)
                 for (int i = 0; i < ContentNoClasses.Count; i++)
                 {
-
+                    //Set cursor to current line
                     String cursor = ContentNoClasses[i];
+                    //Get rid of newline characters, spaces, and tabs
                     cursor = cursor.Replace("\n", "").Replace("\r", "").Replace(" ", "").Replace("\t", "");
+                    //if this is an empty line, we can move cursor to next item by skipping the rest of the code and iterating loop
                     if (cursor == "")
                         continue;
+                    //-------------------------------ARRAYS START---------------------------------------
+                    //If cursor contains a [], it is almost certainly an array(since that is how to declare/mention arrays
                     if (cursor.Contains("[]"))//array
                     {
+                        //A A3Variable object to hold the details of the array
                         A3Variable var = new A3Variable();
                         //Begin Array processes, doesn't end until we hit a ;
                         //multiple decs in a single line will need to be special later;
                         for (int e = i; e < ContentNoClasses.Count; e++)
+                            //Iterates through every line of the class(stripped of subclasses), starting at current line cursor is at
+                            //  so we can find the end of the array
                         {
                             if (cursor.Contains(";"))
+                                //this means we have found the end of the array, arrays end with }; OR with ;
                             {
+                                //Store this line of code into A3Variable Object
                                 if (var.OriginalCode.Count > 0)
-                                    var.OriginalCode.Add(cursor);
+                                    //If we already have some code in the A3Variable, than just append it
+                                    var.OriginalCode.Add(ContentNoClasses[e]);
                                 else
-                                    var.OriginalCode = new List<String> { cursor };
+                                    //Otherwise we need a new List since we cannot append to a null list.
+                                    var.OriginalCode = new List<String> { ContentNoClasses[e] };
+                                //Make sure the cursor follows us so it starts after the array when we are done
                                 i = e;
+                                //Break out of this loop, we found the ; which means the array is over.
                                 break;
                             }
                             else
+                            //We have yet to find the end of the array, this is just another line in the array
                             {
+                                //Store this line of code into A3Variable Object
                                 if (var.OriginalCode.Count > 0)
-                                    var.OriginalCode.Add(cursor);
+                                    //If we already have some code in the A3Variable, than just append it
+                                    var.OriginalCode.Add(ContentNoClasses[e]);
                                 else
-                                    var.OriginalCode = new List<String> { cursor };
+                                    //Otherwise we need a new List since we cannot append to a null list.
+                                    var.OriginalCode = new List<String> { ContentNoClasses[e] };
                             }
                         }
+                        //We've already grabbed all the content of the Variable now we need to store it
                         if (Variables.Count > 0)
+                            //If we have items in Variable list we can just append it
                             Variables.Add(var);
                         else
+                            //If we don't have Variables already, we need to initialize the list, cannot append to null list
                             Variables = new List<A3Variable> { var };
                     }
+                    //-------------------------------ARRAYS END---------------------------------------
                     else if (cursor.Contains("="))//variable
                     {
                         if (Variables.Count > 0)
@@ -257,8 +278,10 @@ namespace Arma_3_Parser
                         else
                             Variables = new List<A3Variable> { new A3Variable(cursor) };
                     }
+                    //So we've stored all the code in the variable, but now we need to be able to grab the name and values
                     if (Variables.Count > 0)
-                        Variables[Variables.Count - 1].processCode();//process the last variable added
+                        //If we have any variables
+                        Variables[Variables.Count - 1].processCode();//process the last variable added(variable will sort out values and name from the code saved)
                 }
             if (SubClasses.Count > 0)
                 foreach (A3TertiaryClass x in SubClasses)

@@ -28,15 +28,24 @@ namespace Arma_3_Parser
 
         public void processCode()//sort out the name and values from originalCode
         {
-            List<String> value = OriginalCode[0].Split('=').ToList();
+            String cursor = OriginalCode[0].Replace("[]", "").Replace(";", "").Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace("{}", "");
+            //Seperate the name from the value, left side of = is name, right side(and below) are values
+            List<String> value = cursor.Split('=').ToList();
+            //Name is first value, because left of =
             fieldName = value[0];
+            
             if (Value.Count > 1)
-                this.Value.Add(value[1].Replace("[]", "").Replace(";", ""));
+                //check to make sure in case we don't have an = (variable not initialised, but mentioned)
+                this.Value.Add(value[1].Replace("[]", "").Replace(";", "").Replace(",", "").Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace("}", "").Replace("{", ""));
             else
-                this.Value = new List<String> { value[1].Replace("[]", "").Replace(";", "") };
-            for(int i = 2; i < Value.Count; i++)
+                //Normal, more than 1 variable so more than just name
+                this.Value = new List<String> { value[1].Replace("[]", "").Replace(";", "").Replace(",", "").Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace("}", "").Replace("{", "") };
+
+            for (int i = 1; i < originalCode.Count; i++)
+                //Iterate through all the lines after 1st line(first is name, second is first value which are gathered above)
+                // Now we need to grab other values;
             {
-                this.Value.Add(value[i].Replace("[]", "").Replace(";", ""));
+                this.Value.Add(originalCode[i].Replace("[]", "").Replace(";", "").Replace(",", "").Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace("}", "").Replace("{", ""));
             }
 
         }
