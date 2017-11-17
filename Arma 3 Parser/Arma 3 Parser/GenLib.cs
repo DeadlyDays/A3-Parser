@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
 namespace Arma_3_Parser
 {
     static class GenLib//General Library of Methods
     {
-
+        /*
         public static MySqlConnection openDB(String serverAddr, String UID, String Password, String DB)
         {
             MySqlConnection db = new MySqlConnection();
@@ -32,7 +32,7 @@ namespace Arma_3_Parser
         public static void closeDB(MySqlConnection db)
         {
             db.Close();
-        }
+        }*/
 
         public static List<String> binList(String path)//create a list of bin files
         {
