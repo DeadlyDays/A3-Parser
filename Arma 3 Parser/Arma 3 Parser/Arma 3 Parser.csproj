@@ -106,20 +106,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="A3.cs" />
-    <Compile Include="A3Class.cs" />
-    <Compile Include="A3Level2Class.cs" />
-    <Compile Include="A3CppFile.cs" />
-    <Compile Include="A3Level1Class.cs" />
-    <Compile Include="A3Presentation.cs" />
-    <Compile Include="A3TertiaryClass.cs" />
-    <Compile Include="A3Variable.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config.cs" />
-    <Compile Include="GenLib.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

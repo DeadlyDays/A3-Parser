@@ -237,12 +237,6 @@ namespace Arma_3_Parser
                 txtOutputPath.Text = con.OutputPath;
                 txtBankRevPath.Text = con.UnpackPath;
                 txtCfgConvertPath.Text = con.ConvertPath;
-                txtNotContainPartClass.Text = con.NotContainPartClass;
-                txtContainPartClass.Text = con.ContainPartClass;
-                txtHasDirectParent.Text = con.HasDirectParent;
-                txtHasParent.Text = con.HasOneOfParent;
-                txtContainsFields.Text = con.AnyField;
-                txtDisplayFields.Text = con.DispField;
             }
             else
             {
@@ -261,12 +255,6 @@ namespace Arma_3_Parser
             con.OutputPath = txtOutputPath.Text;
             con.UnpackPath = txtBankRevPath.Text;
             con.ConvertPath = txtCfgConvertPath.Text;
-            con.NotContainPartClass = txtNotContainPartClass.Text;
-            con.ContainPartClass = txtContainPartClass.Text;
-            con.HasDirectParent = txtHasDirectParent.Text;
-            con.HasOneOfParent = txtHasParent.Text;
-            con.AnyField = txtContainsFields.Text;
-            con.DispField = txtDisplayFields.Text;
 
             IFormatter writer = new BinaryFormatter();
             Stream file = new FileStream(txtConfigPath.Text, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -292,165 +280,7 @@ namespace Arma_3_Parser
 
         private void btnProcess_Click(object sender, RoutedEventArgs e)
         {
-            String pboPath = txtPboPath.Text;
-            String binPath = txtBinPath.Text;
-            String cppPath = txtCppPath.Text;
-            String serialPath = txtSerialized.Text;
-            String outputPath = txtOutputPath.Text;
-            List<String> addColumn = new List<String>();
-            List<String> addToAllRows = new List<String>();
-            List<String> temp = tbExtraColumns.Text.Split(';').ToList();
-            if(tbExtraColumns.Text != String.Empty)
-            foreach (String x in temp)
-            {
-                addColumn.Add(x.Split(':')[0]);
-                addToAllRows.Add(x.Split(':')[1]);
-            }
-            if(addColumn.Count != addToAllRows.Count)
-            {
-                addColumn = null;
-                addToAllRows = null;
-            }
-            //Extract
-            List<String> binList = new List<String>();
-            if (cbExtractIsNeeded.IsChecked.Value)
-            {
-                Log("Extracting Files At: " + pboPath);
-                binList = GenLib.extract(pboPath, binPath, txtBankRevPath.Text);
-                Log("Extracted Files To: " + binPath);
-            }
-            //Convert
-            List<String> cppList = new List<String>();
-            if (cbConvertIsNeeded.IsChecked.Value)
-            {
-                Log("Converting Files At: " + binPath);
-                if (!cbExtractIsNeeded.IsChecked.Value)
-                    binList = GenLib.binList(binPath);
-                cppList = GenLib.convert(binList, cppPath, txtCfgConvertPath.Text);
-                Log("Converted Files To: " + cppPath);
-            }
-            //Serialize
-            if (cbSerialize.IsChecked.Value)
-            {
-                if (cbConvertIsNeeded.IsChecked.Value)
-                    ;
-                else
-                    cppList = GenLib.cppList(cppPath);
-                //Data Grab > Objects
-
-                ///MultiThread
-                ///
-                //Clear null files
-                for (int i = 0; i < cppList.Count; i++)
-                {
-                    if (cppList[i] == null)
-                    {
-                        cppList.Remove(cppList[i]);
-                        i--;
-                    }
-                }
-
-
-                A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
-                
-                Parallel.For(0,
-                    (cppList.Count - 1), new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = 1
-                    },
-                    a =>
-                {
-                    A3CppFile tempArray = GenLib.parseFile(cppList[a]);
-                    fileArray[a] = tempArray;
-                });
-                ///SingleThread
-                ///
-                /*
-                A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
-                for(int i = 0; i < cppList.Count; i++)
-                    {
-                        fileArray[i] = GenLib.parseFile(cppList[i]);
-                    }
-                    */
-
-                //Serialize
-                Log("Serializing...");
-                GenLib.serialize(fileArray.ToList(), serialPath);
-                Log("Serialized");
-            }
-            ///Parse
-            ///
-            if (cbProcess.IsChecked.Value)
-            {
-                
-                Log("Deserializing...");
-                //Deserialize objects to parse
-                List<A3CppFile> flist = GenLib.deserialize(serialPath);
-                Log("Deserialized");
-                Log("Parsing...");
-                //create list of all classes
-                List<A3Class> list = new List<A3Class>();
-                
-                if (flist != null)
-                    for(int i = 0; i < flist.Count; i++)
-                    {
-                        if(flist[i] != null)
-                            if(flist[i].A3EntireClassList != null)
-                                foreach(A3Class c in flist[i].A3EntireClassList)
-                                {
-                                    if (list != null)
-                                        list.Add(c);
-                                    else
-                                        list = new List<A3Class> { c };
-                                }
-                    }
-
-                list = A3Presentation.includeOnlySelected(list, cbShowCfgVehicles.IsChecked.Value, cbShowCfgAmmo.IsChecked.Value, cbShowCfgWeapons.IsChecked.Value, cbShowCfgMagazines.IsChecked.Value, cbShowLvl1.IsChecked.Value, cbShowLvl2.IsChecked.Value, cbShowTertiary.IsChecked.Value, cbShowOtherCfg.IsChecked.Value);
-
-                //Apply Filters
-                List<String> outputList = new List<String>();
-                if(txtNotContainPartClass.Text != "")
-                    list = A3Presentation.filterOutClassByPartialName(list, txtNotContainPartClass.Text.Split(';'));
-                if (txtContainPartClass.Text != "")
-                    list = A3Presentation.filterInClassByPartialName(list, txtContainPartClass.Text.Split(';'));
-                if (txtHasDirectParent.Text != "")
-                    list = A3Presentation.filterInClassByDirectParent(list, txtHasDirectParent.Text.Split(';'));
-                if (txtHasParent.Text != "")
-                    list = A3Presentation.filterInClassByAnyParent(list, txtHasParent.Text.Split(';'));
-                if (txtContainsFields.Text != "")
-                    list = A3Presentation.filterOutClassByVariableName(list, txtContainsFields.Text.Split(';'));
-                if (txtDisplayFields.Text != "")
-                    outputList = A3Presentation.outputSelectedFields(list, txtDisplayFields.Text.Split(';'), cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows,
-                    cbConfigType.IsChecked.Value);
-                if (cbDisplayAllFields.IsChecked.Value)
-                    outputList = A3Presentation.outputAllFields(list, cbShowClassName.IsChecked.Value,
-                    cbShowParentClass.IsChecked.Value, cbShowBaseClass.IsChecked.Value, cbOutputSource.IsChecked.Value, addColumn, addToAllRows,
-                    cbConfigType.IsChecked.Value);
-                
-                Log("Parsed");
-                //Build Output
-                Log("Creating File...");
-                StringBuilder output = new StringBuilder(5000);
-                using (StreamWriter sw = File.CreateText(txtOutputPath.Text))
-                {
-                    foreach (String s in outputList)
-                    {
-                        if (output.Capacity >= (output.MaxCapacity / 8))
-                        {
-                            sw.Write(output);
-                            output = new StringBuilder(5000);
-                        }
-                        else
-                            output.Append(s);
-                    }
-                    sw.Write(output);
-                }
-                
-                //Create Output File
-                Log("File Created At: " + txtOutputPath.Text);
-                
-            }
+            
 
         }
     }
