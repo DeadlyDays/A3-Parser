@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
 namespace Arma_3_Parser
 {
     static class GenLib//General Library of Methods
     {
-
+        /*
         public static MySqlConnection openDB(String serverAddr, String UID, String Password, String DB)
         {
             MySqlConnection db = new MySqlConnection();
@@ -32,7 +33,7 @@ namespace Arma_3_Parser
         public static void closeDB(MySqlConnection db)
         {
             db.Close();
-        }
+        }*/
 
         public static List<String> binList(String path)//create a list of bin files
         {
@@ -76,7 +77,63 @@ namespace Arma_3_Parser
             }
         }
 
-        public static List<String> extract(String fromPath, String toPath, String BankRev)//extract a list of .pbo's into .bin's at a location from a location(and all subfolders)
+        /// <summary>
+        /// Async method to run commandline apps
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task<int> RunProcessAsync(string fileName, string args)
+        {
+            using (var process = new Process
+            {
+                StartInfo =
+        {
+            FileName = fileName, Arguments = args,
+            UseShellExecute = false, CreateNoWindow = true,
+            RedirectStandardOutput = true, RedirectStandardError = true
+        },
+                EnableRaisingEvents = true
+            })
+            {
+                return await RunProcessAsync(process).ConfigureAwait(false);
+            }
+        }
+        /// <summary>
+        /// Async method to run commandline apps
+        /// </summary>
+        /// <param name="process"></param>
+        /// <returns></returns>
+        private static Task<int> RunProcessAsync(Process process)
+        {
+            var tcs = new TaskCompletionSource<int>();
+
+            process.Exited += (s, ea) => tcs.SetResult(process.ExitCode);
+            process.OutputDataReceived += (s, ea) => Console.WriteLine(ea.Data);
+            process.ErrorDataReceived += (s, ea) => Console.WriteLine("ERR: " + ea.Data);
+
+            bool started = process.Start();
+            if (!started)
+            {
+                //you may allow for the process to be re-used (started = false) 
+                //but I'm not sure about the guarantees of the Exited event in such a case
+                throw new InvalidOperationException("Could not start process: " + process);
+            }
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// extract a list of .pbo's into .bin's at a location from a location(and all subfolders)
+        /// </summary>
+        /// <param name="fromPath"></param>
+        /// <param name="toPath"></param>
+        /// <param name="BankRev"></param>
+        /// <returns></returns>
+        public static List<String> extract(String fromPath, String toPath, String BankRev)
         {
             //fromPath is a Path to the parent folder of a bunch of PBO's
             //toPath is where we are extracting to
@@ -85,58 +142,58 @@ namespace Arma_3_Parser
             //We are returning a List of Paths which point to where we put the extracted PBO's(folder paths)
 
             List<String> PBOFilePathList = pboList(fromPath);//This creates the list of PBO's
-            
-            for (int i = 0; i < PBOFilePathList.Count; i++)//iterate through all the PBO's and run bankrev on each
+            Parallel.ForEach(PBOFilePathList, (thisPBOPath) =>
             {
                 ProcessStartInfo alpha = new ProcessStartInfo();
-                
+
                 alpha.FileName = BankRev;
                 //Launch process in background
                 alpha.CreateNoWindow = true;
                 alpha.WindowStyle = ProcessWindowStyle.Hidden;
-                alpha.Arguments = "-f " + toPath + " \"" + PBOFilePathList[i] + "\"";
+                alpha.Arguments = "-f \"" + toPath + "\" \"" + thisPBOPath + "\"";
                 Process trackit = Process.Start(alpha);
                 trackit.WaitForExit();
-               
-            }
-            //potentially a bug where not all are being extracted, need to verify and rerun on missing if so.
-            /* Too Bruteforce, silly
-            List<String> todo = PBOFilePathList;
-            while (System.IO.Directory.GetDirectories(toPath).ToList().Count != PBOFilePathList.Count)
-            {
-                List<String> temp = System.IO.Directory.GetDirectories(toPath).ToList();
-                
-                for (int i = 0; i < todo.Count; i++)//don't redo already done
-                {
-                    for(int y = 0; y < temp.Count; y++)
-                    {
-                        if(todo[i].Replace("config.bin", "").Equals(temp[y]))
-                        {
-                            todo.Remove(todo[i]);//remove matches from todo list, only do items on todo list
-                            i--;
-                        }
-                        
-                    }
-                }
-                for (int i = 0; i < todo.Count; i++)//iterate through all the PBO's and run bankrev on each
-                {
-                    ProcessStartInfo alpha = new ProcessStartInfo();
-                    alpha.FileName = BankRev;
-                    //Launch process in background
-                    alpha.CreateNoWindow = true;
-                    alpha.WindowStyle = ProcessWindowStyle.Hidden;
-                    alpha.Arguments = "-f " + toPath + " \"" + todo[i] + "\"";
-                    Process.Start(alpha);
-                }
-            }*/
-
-
+            });
 
             return binList(toPath);
         }
 
+
+        /// <summary>
+        /// convert from a list of .bin's to a location as .cpp's
+        /// </summary>
+        /// <param name="gui"></param>
+        /// <param name="fromList"></param>
+        /// <param name="toThisPath"></param>
+        /// <param name="CfgConvert"></param>
+        /// <returns></returns>
         public static List<String> convert(List<String> fromList, String toThisPath, String CfgConvert)
         {
+
+            Parallel.ForEach(fromList, (thisThing) =>
+            {
+                //txtProgress.Text = "UnBinarizing\n" + x + "\nto Output Location";
+                String toPath = thisThing.Replace(".bin", ".cpp");
+
+                ///Identify currently set Path
+                String topPath = toThisPath + "\\" + new DirectoryInfo(thisThing).Parent;
+
+                ///Replace the current path with the proper path
+                toPath = toThisPath + "\\" + new DirectoryInfo(thisThing).Parent + "\\" + Path.GetFileName(toPath);
+                
+                ///Create the directory if it doesn't exist
+                System.IO.Directory.CreateDirectory(topPath);
+
+                //Process.Start(FilePathToConverterTool, "-txt -dst " + OutputFolder + " " + x);//spits out to folder
+                ProcessStartInfo alpha = new ProcessStartInfo();
+                alpha.FileName = CfgConvert;
+                alpha.CreateNoWindow = true;
+                alpha.WindowStyle = ProcessWindowStyle.Hidden;
+                alpha.Arguments = "-txt -dst \"" + toPath + "\" \"" + thisThing + "\"";
+                Process trackit = Process.Start(alpha);
+                trackit.WaitForExit();
+            });
+            /*
             //fromList is a List of Strings of PBO Paths
             for (int i = 0; i < fromList.Count; i++)
             {
@@ -155,45 +212,10 @@ namespace Arma_3_Parser
                 Process trackit = Process.Start(alpha);
                 trackit.WaitForExit();
             }
-            //there is a bug where not all are converting, we need to verify and rerun on missing until all done
-            /* Too Bruteforce, silly
-            List<String> todo = fromList;
-            List<String> check = System.IO.Directory.GetFiles(toThisPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
-            while (check.Count != todo.Count)
-            {
-                List<String> temp = System.IO.Directory.GetFiles(toThisPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
-                for (int i = 0; i < todo.Count; i++)
-                {
-                    for(int y = 0; y < temp.Count; y++)
-                    {
-                        if(todo[i].Equals(temp[y]))
-                        {
-                            todo.Remove(temp[y]);
-                            i--;
-                        }
-                    }
-                }
-                for (int i = 0; i < todo.Count; i++)
-                {
-                    //txtProgress.Text = "UnBinarizing\n" + x + "\nto Output Location";
-                    String toPath = fromList[i].Replace("bin", "cpp").Replace("BIN", "CPP");
-                    int test = toPath.LastIndexOf('\\', toPath.Length - 1);
-                    String topPath = toPath.Remove(toPath.LastIndexOf('\\'), (toPath.Length - toPath.LastIndexOf('\\', toPath.Length - 1)));//Grab the Path
-                    System.IO.Directory.CreateDirectory(topPath);
-
-                    //Process.Start(FilePathToConverterTool, "-txt -dst " + OutputFolder + " " + x);//spits out to folder
-                    ProcessStartInfo alpha = new ProcessStartInfo();
-                    alpha.FileName = CfgConvert;
-                    alpha.CreateNoWindow = true;
-                    alpha.WindowStyle = ProcessWindowStyle.Hidden;
-                    alpha.Arguments = "-txt -dst " + toPath + " " + todo[i];
-                    Process.Start(alpha);
-                }
-                check = System.IO.Directory.GetFiles(toThisPath, "config.cpp", System.IO.SearchOption.AllDirectories).ToList();
-            }
-            List<String> checkList = System.IO.Directory.GetFiles(toThisPath, "config.bin", System.IO.SearchOption.AllDirectories).ToList();*/
+            */
+            
             return cppList(toThisPath);
-        }//convert from a list of .bin's to a location as .cpp's
+        }
 
         public static A3CppFile parseFile(String path)//process a cpp file into a A3CppFile object
         {

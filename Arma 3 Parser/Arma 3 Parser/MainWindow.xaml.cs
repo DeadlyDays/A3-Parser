@@ -290,7 +290,7 @@ namespace Arma_3_Parser
             Log("Load Complete");
         }
 
-        private void btnProcess_Click(object sender, RoutedEventArgs e)
+        private async void btnProcess_Click(object sender, RoutedEventArgs e)
         {
             String pboPath = txtPboPath.Text;
             String binPath = txtBinPath.Text;
@@ -451,6 +451,10 @@ namespace Arma_3_Parser
                 Log("File Created At: " + txtOutputPath.Text);
                 
             }
+
+
+            //Add code to update tvClassList treeview with classes
+            //if serialized path exists and is valid, load it
 
         }
     }
