@@ -217,7 +217,12 @@ namespace Arma_3_Parser
             return cppList(toThisPath);
         }
 
-        public static A3CppFile parseFile(String path)//process a cpp file into a A3CppFile object
+        /// <summary>
+        /// process a cpp file into a A3CppFile object
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static A3CppFile parseFile(String path)
         {
 
             A3CppFile file = new A3CppFile();
@@ -231,8 +236,35 @@ namespace Arma_3_Parser
             //Parse all Variables
             file = parseFileClassesForVariables(file);
             //Build Inheritance Tree -- PERFORMANCE BOTTLENECK
-            file.buildTrees();
+            //file.buildTrees();
             return file;
+        }
+
+
+
+        /// <summary>
+        /// Parse a config.cpp file into a Dataset
+        /// </summary>
+        /// <param name="path"></param>
+        public static ArmaCollection parseFileToDataSet(String modName, String path)
+        {
+            /// Read file contents into String
+            String configString = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
+            
+            /// Loop for breaking down a file, iterate and remove each CfgClass
+            /// 
+            while(configString.Contains("class"))
+            {
+                //Grab first class, go through nested buildout internally
+
+                //Tranfer collection of data to dataset
+
+                //remove this class from string
+
+                //move to next class, let loop continue
+            }
+
+            return new ArmaCollection();
         }
 
         public static A3CppFile parseFileForClasses(A3CppFile file)//process a filepath listed in a file for all the classes and sort them into the file

@@ -24,11 +24,13 @@ namespace Arma_3_Parser
     /// </summary>
     public partial class MainWindow : Window
     {
+        ArmaCollection workingCollection;
         public MainWindow()
         {
             InitializeComponent();
             Log("Program Start");
             txtConfigPath.Text = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+            workingCollection = new ArmaCollection();
         }
 
         private void Log(string text)
@@ -292,14 +294,19 @@ namespace Arma_3_Parser
 
         private async void btnProcess_Click(object sender, RoutedEventArgs e)
         {
+            //
+            //Grab all the path names needed
+            //
             String pboPath = txtPboPath.Text;
             String binPath = txtBinPath.Text;
             String cppPath = txtCppPath.Text;
             String serialPath = txtSerialized.Text;
             String outputPath = txtOutputPath.Text;
+            //init some lists
             List<String> addColumn = new List<String>();
             List<String> addToAllRows = new List<String>();
             List<String> temp = tbExtraColumns.Text.Split(';').ToList();
+
             if(tbExtraColumns.Text != String.Empty)
             foreach (String x in temp)
             {
@@ -311,7 +318,9 @@ namespace Arma_3_Parser
                 addColumn = null;
                 addToAllRows = null;
             }
+            //
             //Extract
+            //
             List<String> binList = new List<String>();
             if (cbExtractIsNeeded.IsChecked.Value)
             {
@@ -319,7 +328,9 @@ namespace Arma_3_Parser
                 binList = GenLib.extract(pboPath, binPath, txtBankRevPath.Text);
                 Log("Extracted Files To: " + binPath);
             }
+            //
             //Convert
+            //
             List<String> cppList = new List<String>();
             if (cbConvertIsNeeded.IsChecked.Value)
             {
@@ -329,9 +340,12 @@ namespace Arma_3_Parser
                 cppList = GenLib.convert(binList, cppPath, txtCfgConvertPath.Text);
                 Log("Converted Files To: " + cppPath);
             }
+            //
             //Serialize
+            //
             if (cbSerialize.IsChecked.Value)
             {
+                //Grab the list of cpp files if we haven't already grabbed them
                 if (cbConvertIsNeeded.IsChecked.Value)
                     ;
                 else
@@ -352,18 +366,29 @@ namespace Arma_3_Parser
 
 
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
-                
-                Parallel.For(0,
-                    (cppList.Count - 1), new ParallelOptions
+                ///
+                /// Prompt for the name of the mod we are parsing
+                ///
+                Prompt modNamePrompt = new Prompt();
+                modNamePrompt.ShowDialog();
+                String modName = modNamePrompt.txtResponse.Text;
+
+                Parallel.For(0, (cppList.Count - 1), new ParallelOptions
                     {
+                        //This property is for testing, comment out if not testing so it works multithreaded
                         MaxDegreeOfParallelism = 1
                     },
                     a =>
-                {
-                    A3CppFile tempArray = GenLib.parseFile(cppList[a]);
-                    fileArray[a] = tempArray;
-                });
-                ///SingleThread
+                    {
+                        //
+                        // Here is the main work on parsing, done by file(for best multithreading effect)
+                        //
+                        //A3CppFile tempArray = GenLib.parseFile(cppList[a]);
+                        workingCollection = GenLib.parseFileToDataSet(modName, cppList[a]);
+                        //fileArray[a] = tempArray;
+                    });
+                ///
+                ///SingleThread Alternative
                 ///
                 /*
                 A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
@@ -378,6 +403,7 @@ namespace Arma_3_Parser
                 GenLib.serialize(fileArray.ToList(), serialPath);
                 Log("Serialized");
             }
+            ///
             ///Parse
             ///
             if (cbProcess.IsChecked.Value)

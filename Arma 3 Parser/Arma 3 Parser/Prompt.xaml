@@ -1,0 +1,16 @@
+﻿<Window x:Class="Arma_3_Parser.Prompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arma_3_Parser"
+        mc:Ignorable="d"
+        Title="Prompt" Height="125.302" Width="300">
+    <Grid>
+        <Label Name="lblPrompt" Content="Please Respond Below:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="txtResponse" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="272"/>
+        <Button Name="btnSubmit" Content="Submit" HorizontalAlignment="Left" Margin="207,64,0,0" VerticalAlignment="Top" Width="75" Click="btnSubmit_Click"/>
+        <Button Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="122,64,0,0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
+
+    </Grid>
+</Window>
