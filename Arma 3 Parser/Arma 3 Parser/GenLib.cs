@@ -195,41 +195,7 @@ namespace Arma_3_Parser
             return cppList(toThisPath);
         }//convert from a list of .bin's to a location as .cpp's
 
-        public static A3CppFile parseFile(String path)//process a cpp file into a A3CppFile object
-        {
-
-            A3CppFile file = new A3CppFile();
-
-            file.FilePath = path;
-            file.OriginalCodeString = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);//read file contents into String
-            file.splitOCode();//split string into list by line
-
-            //Parse all Class's
-            file = parseFileForClasses(file);//Find and seperate the classes with their content
-            //Parse all Variables
-            file = parseFileClassesForVariables(file);
-            //Build Inheritance Tree -- PERFORMANCE BOTTLENECK
-            file.buildTrees();
-            return file;
-        }
-
-        public static A3CppFile parseFileForClasses(A3CppFile file)//process a filepath listed in a file for all the classes and sort them into the file
-        {
-            file.stripClasses();
-            return file;
-        }
-
-        public static A3CppFile parseFileClassesForVariables(A3CppFile file)//build list of variables
-        {
-            file.stripVariables();
-            return file;
-        }
-
-        public static A3CppFile processFileClassesForInheritanceTree(A3CppFile file)//build the nested and extended tree lists and combine into inheritance tree
-        {
-            file.buildTrees();
-            return file;
-        }
+        
         /*
         public static A3CppFile actualizeInheritanceForClassesInFile(A3CppFile file)//import variables from extended tree
         {
@@ -237,54 +203,7 @@ namespace Arma_3_Parser
             return file;
         }
         */
-        public static void serialize(List<A3CppFile> fileList, String path)
-        {
-            List<String> pathList = new List<String>();
-            if (System.IO.Directory.Exists(path))
-            {
-                pathList = System.IO.Directory.GetFiles(path, "*.dat", System.IO.SearchOption.AllDirectories).ToList();
-            }
-            else
-            {
-                System.IO.Directory.CreateDirectory(path);
-            }
-            if (pathList.Count > 0)
-            foreach(String x in pathList)//remove all these Serial*.dat's if they exist
-            {
-                System.IO.File.Delete(x);
-            }
-            for(int i = 0; i < fileList.Count; i++)//create a seperate .dat file for each cpp
-            {
-                if (fileList[i] == null)
-                    continue;
-                String fileName = path + "\\serial" + i + ".dat";
-                IFormatter form = new BinaryFormatter();
-                Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                form.Serialize(stream, fileList[i]);
-                stream.Close();
-            }
-            
-        }
-
-        public static List<A3CppFile> deserialize(String filePath)
-        {
-            List<String> pathList = new List<String>();
-            if (System.IO.Directory.Exists(filePath))
-            {
-                pathList = System.IO.Directory.GetFiles(filePath, "*.dat", System.IO.SearchOption.AllDirectories).ToList();
-            }
-            else;
-            List<A3CppFile> list = new List<A3CppFile>();
-            for(int i = 0; i < pathList.Count; i++)
-            {
-                IFormatter form = new BinaryFormatter();
-                Stream stream = new FileStream(pathList[i], FileMode.Open, FileAccess.Read, FileShare.Read);
-
-                if (stream != null) list.Add((A3CppFile)form.Deserialize(stream));
-                stream.Close();
-            }
-            return list;
-        }
+        
 
         public static int endOfWord(String line, int startOfWord)
         {
