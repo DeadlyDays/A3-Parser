@@ -27,25 +27,25 @@
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="229" VerticalAlignment="Top" Width="728" Margin="10,10,0,0">
             <TabItem Header="TabItem">
                 <Grid Background="#FFE5E5E5">
-                    <Label x:Name="lblPBO" Content="Path to PBO Folder" Margin="4,4,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPBO" Content="Path to PBO Folder (Inside Addon Directory)" Margin="4,4,0,0" Height="25" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtPboPath" Height="35" Margin="8,28,0,0" TextWrapping="Wrap" Text="" Width="255" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <CheckBox x:Name="cbExtractIsNeeded" Content="Extract?" Margin="264,28,0,0"   RenderTransformOrigin="0.32,0.263" Height="15" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Button Content="Browse" Height="20" HorizontalAlignment="Left" Margin="263,43,0,0" x:Name="btnBrowsePBO" VerticalAlignment="Top" Width="88" Click="btnBrowsePBO_Click" />
 
-                    <Label x:Name="lblBIN" Content="Path to BIN Folder" Margin="4,62,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblBIN" Content="Path to BIN Folder (Extract PBO into here)" Margin="4,62,0,0" Height="25" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtBinPath" Height="35" Margin="8,84,0,0" TextWrapping="Wrap" Text="" Width="255" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <CheckBox x:Name="cbConvertIsNeeded" Content="Convert?" Margin="264,84,0,0"  Height="14" Width="67" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="264,97,0,0" x:Name="btnBrowseBIN" VerticalAlignment="Top" Width="88" Click="btnBrowseBIN_Click" />
 
-                    <Label x:Name="lblCPP" Content="Path to CPP Folder" Margin="4,118,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblCPP" Content="Path to CPP Folder( Convert BIN to CPP here)" Margin="4,118,0,0" Height="25" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtCppPath" Height="35" Margin="8,141,0,0" TextWrapping="Wrap" Text="" Width="255" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <CheckBox x:Name="cbSerialize" Content="Serialize?"  Margin="264,141,0,0"  Height="20" Width="76" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="264,154,0,0" x:Name="btnBrowseCPP" VerticalAlignment="Top" Width="88" Click="btnBrowseCPP_Click" />
-                    <Label x:Name="lblSerialized" Content="Path to Serialized File" Margin="356,62,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblSerialized" Content="Path to Serialized File (CPP Read and Turned to CSV)" Margin="356,62,0,0" Height="25" Width="347" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtSerialized" Height="35" Margin="360,87,0,0" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="255" VerticalAlignment="Top"/>
                     <CheckBox x:Name="cbProcess" Content="Parse?"  Margin="616,85,0,0"   Height="18" Width="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="615,100,0,0" x:Name="btnBrowseSerialized" VerticalAlignment="Top" Width="88" Click="btnBrowseSerialized_Click" />
-                    <Label x:Name="lblOutput" Content="Path to Output File" Margin="356,121,0,0" Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblOutput" Content="Path to Output File (Customized/Filtered CSV)" Margin="356,121,0,0" Height="25" Width="348" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtOutputPath" Height="35" Margin="360,145,0,0" TextWrapping="Wrap" Text="" IsEnabled="False" HorizontalAlignment="Left" Width="255" VerticalAlignment="Top"/>
                     <Button Content="Browse" Height="22" HorizontalAlignment="Left" Margin="616,158,0,0" x:Name="btnBrowseOutput" VerticalAlignment="Top" Width="88" Click="btnBrowseOutput_Click" />
                 </Grid>
