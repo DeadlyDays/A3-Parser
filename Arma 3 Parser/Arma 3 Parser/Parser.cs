@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Arma_3_Parser
 {
@@ -14,6 +15,13 @@ namespace Arma_3_Parser
         private List<String> fileContentList = new List<String>(); //List of Strings, each the entire content of a file.
         private DataSet DB = new DataSet();//This is a inmemory layout of the database, data is staged here then moved to online Database.
 
+        private String rClassDec = @"class\s+(?<ClassName>\w+)\s*:\s*(?<ParentName>\w*)";
+        private String rOpenContext = "{";
+        private String rCloseContext = "}";
+        private String rVariableDec = @"(?<VariableName>\w+)\s*=(?<VariableValue>.*);";
+        private String rArrayDec = @"(?<ArrayName>\w+)\[]\s*=\s*{\s*(?<ArrayValue>""?\w+""?,?\s*)+\s*}\s*;";
+
+
         public Parser()
         {
             //Track Classes
@@ -21,6 +29,7 @@ namespace Arma_3_Parser
             DataColumn C_pk_ClassUID = ClassTB.Columns.Add("C_pk_ClassUID", typeof(Int32));
             ClassTB.Columns.Add("C_Name", typeof(String));
             ClassTB.Columns.Add("C_ParentName", typeof(String));
+            ClassTB.Columns.Add("C_OwnerName", typeof(String));
             ClassTB.Columns.Add("C_Filename", typeof(String));
             ClassTB.Columns.Add("C_LineClassDef", typeof(Int32));
             ClassTB.Columns.Add("C_LineClassStart", typeof(Int32));
@@ -78,25 +87,30 @@ namespace Arma_3_Parser
 
         }
 
-        public void populateFileContentList(String path)
-        //File to parse into a String, added to List<String> fileContentList
-        //Overload for Directory of Files, all to be parsed into a String each and added to List<String> fileContent
+        /// <summary>
+        /// Read String from file, process into DB Tables
+        /// </summary>
+        public DataSet parseFile(String fileContent, DataSet DB)
         {
-            //Seperate logic for System.IO.File and System.IO.Directory
-            //Check if path is a Directory or File
+            //Read declaration by declaration
+            //Identify each line
 
-            //Directory processing
-
-            //File processing
-
-        }
-
-        public void parseFileContentList()
-        //After populateFileContentList we want to parse the content of fileContentList
-        //into a singular set of organized data for review/storage/queries
-        {
+            //We need to keep in mind that we need to join some classes together (CfgVehicle)
 
 
+            ///Finds Base Classes (Like CfgVehicles)
+            //Find first Class
+            //Find matching Open Bracket
+            //Cycle through until found end bracket
+
+            Match FirstClass = Regex.Match(fileContent, rClassDec);
+
+
+            //Base Classes should now be populated, including locations of open and close brackets
+            //Next, we need to recursively redo this on the contents of each class
+
+
+            return new DataSet();
         }
 
         public void prepareLocalDB()

@@ -1,6 +1,8 @@
 ﻿using System;
+
 using System.IO;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -195,7 +197,18 @@ namespace Arma_3_Parser
             return cppList(toThisPath);
         }//convert from a list of .bin's to a location as .cpp's
 
-        
+        public static DataSet parseFile(String path, DataSet DB)//process a cpp file into a Dataset object
+        {
+            //Read file into String Variable
+            String fileContent = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);//read file contents into String
+
+            //Parse File Content
+            Parser parser = new Parser();
+            DB = parser.parseFile(fileContent, DB);
+            
+            return DB;
+        }
+
         /*
         public static A3CppFile actualizeInheritanceForClassesInFile(A3CppFile file)//import variables from extended tree
         {
@@ -203,7 +216,7 @@ namespace Arma_3_Parser
             return file;
         }
         */
-        
+
 
         public static int endOfWord(String line, int startOfWord)
         {
