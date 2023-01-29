@@ -196,15 +196,25 @@ namespace Arma_3_Parser
             List<String> checkList = System.IO.Directory.GetFiles(toThisPath, "config.bin", System.IO.SearchOption.AllDirectories).ToList();*/
             return cppList(toThisPath);
         }//convert from a list of .bin's to a location as .cpp's
-
-        public static DataSet parseFile(String path, DataSet DB)//process a cpp file into a Dataset object
+        public static DataSet parseFile(String path)//process a cpp file into a Dataset object
         {
             //Read file into String Variable
             String fileContent = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);//read file contents into String
 
             //Parse File Content
             Parser parser = new Parser();
-            DB = parser.parseFile(fileContent, DB);
+            DataSet DB = parser.parseFile(path, fileContent);
+
+            return DB;
+        }
+        public static DataSet parseFile(String path, DataSet DB)//process a cpp file into a Dataset object
+        {
+            //Read file into String Variable
+            String fileContent = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);//read file contents into String
+
+            //Parse File Content
+            Parser parser = new Parser(DB);
+            DB = parser.parseFile(path, fileContent);
             
             return DB;
         }
