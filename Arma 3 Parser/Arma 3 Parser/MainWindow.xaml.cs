@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Data;
 
 namespace Arma_3_Parser
 {
@@ -280,7 +281,92 @@ namespace Arma_3_Parser
 
         private void btnProcess_Click(object sender, RoutedEventArgs e)
         {
-            
+            Log("Processing...");
+            String pboPath = txtPboPath.Text;
+            String binPath = txtBinPath.Text;
+            String cppPath = txtCppPath.Text;
+            String serialPath = txtSerialized.Text;
+            String outputPath = txtOutputPath.Text;
+            //Extract
+            List<String> binList = new List<String>();
+            if (cbExtractIsNeeded.IsChecked.Value)
+            {
+                Log("Extracting Files At: " + pboPath);
+                binList = GenLib.extract(pboPath, binPath, txtBankRevPath.Text);
+                Log("Extracted Files To: " + binPath);
+            }
+            //Convert
+            List<String> cppList = new List<String>();
+            if (cbConvertIsNeeded.IsChecked.Value)
+            {
+                Log("Converting Files At: " + binPath);
+                if (!cbExtractIsNeeded.IsChecked.Value)
+                    binList = GenLib.binList(binPath);
+                cppList = GenLib.convert(binList, cppPath, txtCfgConvertPath.Text);
+                Log("Converted Files To: " + cppPath);
+            }
+
+            //Serialize
+            if (cbSerialize.IsChecked.Value)
+            {
+                if (cbConvertIsNeeded.IsChecked.Value)
+                    ;
+                else
+                    cppList = GenLib.cppList(cppPath);
+                //Data Grab > Objects
+
+                ///MultiThread
+                ///
+                //Clear null files
+                for (int i = 0; i < cppList.Count; i++)
+                {
+                    if (cppList[i] == null)
+                    {
+                        cppList.Remove(cppList[i]);
+                        i--;
+                    }
+                }
+                DataSet DB = new DataSet();
+
+                for(int i = 0;i < cppList.Count;i++)
+                {
+                    if(i == 0)
+                    {
+                        DB = GenLib.parseFile(cppList[i]);
+                        continue;
+                    }
+                    DB = GenLib.parseFile(cppList[i], DB);
+                }
+                Log("Processed");
+                /*
+                A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
+
+                Parallel.For(0,
+                    (cppList.Count - 1), new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = 1
+                    },
+                    a =>
+                    {
+                        A3CppFile tempArray = GenLib.parseFile(cppList[a]);
+                        fileArray[a] = tempArray;
+                    });
+                ///SingleThread
+                ///
+                
+                A3CppFile[] fileArray = new A3CppFile[cppList.Count];//we need the static length of the array to parallelize, the index's must exist beforehand for async assignment
+                for(int i = 0; i < cppList.Count; i++)
+                    {
+                        fileArray[i] = GenLib.parseFile(cppList[i]);
+                    }
+                    
+
+                //Serialize
+                Log("Serializing...");
+                GenLib.serialize(fileArray.ToList(), serialPath);
+                Log("Serialized");
+                */
+            }
 
         }
     }

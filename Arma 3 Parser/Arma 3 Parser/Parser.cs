@@ -32,20 +32,35 @@ namespace Arma_3_Parser
         public Parser()
         {
             //Track Classes
+            DataTable ClassDecTB = db.Tables.Add("ClassDecTB");
+            DataColumn CD_pk_ClassDecUID = ClassDecTB.Columns.Add("CD_pk_ClassDecUID", typeof(Int32));
+            ClassDecTB.Columns.Add("CD_Name", typeof(String));
+            ClassDecTB.Columns.Add("CD_ParentName", typeof(String));
+            ClassDecTB.Columns.Add("CD_OwnerName", typeof(String));
+            ClassDecTB.Columns.Add("CD_Filename", typeof(String));
+            ClassDecTB.Columns.Add("CD_LineClassDef", typeof(Int32));
+            ClassDecTB.Columns.Add("CD_LineClassStart", typeof(Int32));
+            ClassDecTB.Columns.Add("CD_LineClassEnd", typeof(Int32));
+            DataColumn CD_fk_ClassUID = ClassDecTB.Columns.Add("CD_fk_ClassUID", typeof(Int32));
+
+            ClassDecTB.PrimaryKey = new DataColumn[] { CD_pk_ClassDecUID };
+            CD_pk_ClassDecUID.AutoIncrement = true;
+            CD_pk_ClassDecUID.AutoIncrementSeed = 1;
+            CD_pk_ClassDecUID.AutoIncrementStep = 1;
+
+            //Track Unique Classes
             DataTable ClassTB = db.Tables.Add("ClassTB");
-            DataColumn C_pk_ClassUID = ClassTB.Columns.Add("C_pk_ClassUID", typeof(Int32));
+            DataColumn C_pk_ClassUID = ClassDecTB.Columns.Add("C_pk_ClassUID", typeof(Int32));
             ClassTB.Columns.Add("C_Name", typeof(String));
-            ClassTB.Columns.Add("C_ParentName", typeof(String));
             ClassTB.Columns.Add("C_OwnerName", typeof(String));
-            ClassTB.Columns.Add("C_Filename", typeof(String));
-            ClassTB.Columns.Add("C_LineClassDef", typeof(Int32));
-            ClassTB.Columns.Add("C_LineClassStart", typeof(Int32));
-            ClassTB.Columns.Add("C_LineClassEnd", typeof(Int32));
 
             ClassTB.PrimaryKey = new DataColumn[] { C_pk_ClassUID };
             C_pk_ClassUID.AutoIncrement = true;
             C_pk_ClassUID.AutoIncrementSeed = 1;
             C_pk_ClassUID.AutoIncrementStep = 1;
+            db.Relations.Add("ClassClassDecJoin",
+                db.Tables["ClassTB"].Columns["C_pk_ClassUID"],
+                db.Tables["ClassDecTB"].Columns["CD_fk_ClassUID"]);
 
             //Track Variables
             DataTable VariableTB = db.Tables.Add("VariableTB");
@@ -85,12 +100,11 @@ namespace Arma_3_Parser
                 db.Tables["VariableTB"].Columns["V_pk_VariableUID"],
                 db.Tables["VariableJoinTB"].Columns["VJ_fk_VariableUID"]);
 
-            //Lookup for ArrayVariables
+            //Lookup for Arrays
             DataTable ArrayJoinTB = db.Tables.Add("ArrayJoinTB");
             DataColumn AJ_pk_UID = ArrayJoinTB.Columns.Add("AJ_pk_UID", typeof(Int32));
             DataColumn AJ_fk_ArrayUID = ArrayJoinTB.Columns.Add("AJ_fk_ArrayUID", typeof(Int32));
             DataColumn AJ_fk_ClassUID = ArrayJoinTB.Columns.Add("AJ_fk_ClassUID", typeof(Int32));
-            DataColumn AJ_fk_VariableUID = ArrayJoinTB.Columns.Add("AJ_fk_VariableUID", typeof(Int32));
 
             ArrayJoinTB.PrimaryKey = new DataColumn[] { AJ_pk_UID };
             AJ_pk_UID.AutoIncrement = true;
@@ -102,9 +116,23 @@ namespace Arma_3_Parser
             db.Relations.Add("ClassArrayJoin",
                 db.Tables["ClassTB"].Columns["C_pk_ClassUID"],
                 db.Tables["ArrayJoinTB"].Columns["AJ_fk_ClassUID"]);
+
+            //Lookup for Arrays
+            DataTable ArrayVariableJoinTB = db.Tables.Add("ArrayVariableJoinTB");
+            DataColumn AV_pk_UID = ArrayVariableJoinTB.Columns.Add("AV_pk_UID", typeof(Int32));
+            DataColumn AV_fk_ArrayUID = ArrayVariableJoinTB.Columns.Add("AV_fk_ArrayUID", typeof(Int32));
+            DataColumn AV_fk_VariableUID = ArrayVariableJoinTB.Columns.Add("AV_fk_VariableUID", typeof(Int32));
+
+            ArrayVariableJoinTB.PrimaryKey = new DataColumn[] { AJ_pk_UID };
+            AV_pk_UID.AutoIncrement = true;
+            AV_pk_UID.AutoIncrementSeed = 1;
+            AV_pk_UID.AutoIncrementStep = 1;
+            db.Relations.Add("ArrayVariableJoin",
+                db.Tables["ArrayTB"].Columns["A_pk_ArrayUID"],
+                db.Tables["ArrayVariableJoinTB"].Columns["AV_fk_ArrayUID"]);
             db.Relations.Add("VariableArrayJoin",
                 db.Tables["VariableTB"].Columns["V_pk_VariableUID"],
-                db.Tables["ArrayJoinTB"].Columns["AJ_fk_VariableUID"]);
+                db.Tables["ArrayVariableJoinTB"].Columns["AV_fk_VariableUID"]);
 
 
         }
@@ -265,7 +293,7 @@ namespace Arma_3_Parser
                 int depthCheck = depth; //We need to track depth changes from this point
                 foreach (Match m in CodeBlockLocations)
                 {
-                    if(m.Index <= classes[i].Groups["OpenContext"].Index)
+                    if(m.Index < classes[i].Groups["OpenContext"].Index)
                     {
                         continue;//We skip ahead if index is less than open, we need only check later brackets
                     }
@@ -294,7 +322,7 @@ namespace Arma_3_Parser
 
             
 
-            return new DataSet();
+            return db;
         }
 
         public void prepareLocalDB()
