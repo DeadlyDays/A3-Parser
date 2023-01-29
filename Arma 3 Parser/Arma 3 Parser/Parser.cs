@@ -262,16 +262,16 @@ namespace Arma_3_Parser
                     }
                 }
 
-                DataRow row2 = db.Tables["ClassTB"].NewRow();
-                row2["C_Name"] = classes[i].Groups["ClassName"].Value;
+                DataRow row2 = db.Tables["ClassDecTB"].NewRow();
+                row2["CD_Name"] = classes[i].Groups["ClassName"].Value;
                 //Not all classes specify an inheriting parent
                 if (classes[i].Groups["ParentName"].Value != null)
                 {
-                    row2["C_ParentName"] = classes[i].Groups["ParentName"].Value;
+                    row2["CD_ParentName"] = classes[i].Groups["ParentName"].Value;
                 }
                 else
                 {
-                    row2["C_ParentName"] = "";
+                    row2["CD_ParentName"] = "";
                 }
                 //We need to know the depth of this class first
                 //If there is a previous class, of a lower depth, then that is the owner
@@ -280,15 +280,15 @@ namespace Arma_3_Parser
                     //Only continue if previous depth was less
                     if (PrevDepth < depth)
                     {
-                        row2["C_OwnerName"] = PrevClassName;
+                        row2["CD_OwnerName"] = PrevClassName;
                     }
-                    else { row2["C_OwnerName"] = null; }
+                    else { row2["CD_OwnerName"] = null; }
                 }
-                else { row2["C_OwnerName"] = null; }
+                else { row2["CD_OwnerName"] = null; }
 
-                row2["C_Filename"] = fileName;
-                row2["C_LineClassDef"] = classes[i].Index;
-                row2["C_LineClassStart"] = classes[i].Groups["OpenContext"].Index;
+                row2["CD_Filename"] = fileName;
+                row2["CD_LineClassDef"] = classes[i].Index;
+                row2["CD_LineClassStart"] = classes[i].Groups["OpenContext"].Index;
                 //To find the matching close bracket, we need to find the next bracket that changes depth back to current.
                 int depthCheck = depth; //We need to track depth changes from this point
                 foreach (Match m in CodeBlockLocations)
@@ -307,13 +307,13 @@ namespace Arma_3_Parser
                         if(depthCheck == depth)
                         {
                             //If we lower depth, and it is now equal again to initial depth, that means we've closed current context
-                            row2["C_LineClassEnd"] = m.Index;
+                            row2["CD_LineClassEnd"] = m.Index;
                             break;//We've completed task
                         }
                     }
 
                 }
-                db.Tables["ClassTB"].Rows.Add(row2);
+                db.Tables["ClassDecTB"].Rows.Add(row2);
 
                 //Populate tracking of previous classname/depth
                 PrevClassName = classes[i].Groups["ClassName"].Value;
